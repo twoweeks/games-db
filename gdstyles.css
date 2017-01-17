@@ -9,9 +9,6 @@ h1 {
 	margin-top: 0;
 }
 .game-img {
-	/*float: left;
-	margin-right: 15px;*/
-	
 	margin-bottom: 1em;
 	width: 100%;
 	display: inline-block;
@@ -19,7 +16,6 @@ h1 {
 	vertical-align: top;
 }
 .game-downloads {
-	/*float:right;*/
 }
 .game-header {
 	display: inline;
