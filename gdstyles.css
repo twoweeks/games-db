@@ -71,6 +71,9 @@ h1 {
 .comp-header {
 	background: #e6e6e6;
 }
+.comp-select-container{
+	background: #e6e6e6;
+}
 .comp-number {
 	color: #e6e6e6;
 }
@@ -80,7 +83,7 @@ h1 {
 .fa-space {
 	margin-left: 8px;
 }
-.mui-container {
+.main-container {
 	min-height: 100%;
 	overflow-x: hidden;
 	transition: margin-left 0.2s;

@@ -24,7 +24,24 @@
 			</div>
 		</div>
 		<div class="main-container">
-			<div class="mui-container"></div>
+			<div class="mui-container">
+				<div class="mui-panel comp-select-container">
+					<h2>Выбор конкурсов</h2>
+					<div style="width: 100%" class="mui-dropdown">
+						<button style="width: 100%" class="mui-btn" data-mui-toggle="dropdown">
+							Конкурс
+							<span class="mui-caret"></span>
+						</button>
+						<ul style="width: 100%" class="mui-dropdown__menu">
+							<li><a href="#" onclick="getComps('twg.json')">Two Weeks Game</a></li>
+							<li><a href="#" onclick="getComps('ttwg.json')">Two Two Weeks Game</a></li>
+							<li><a href="#" onclick="getComps('three-dg.json')">Three Days Game</a></li>
+							<li><a href="#" onclick="getComps('two-dg.json')">Two Days Game</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="comps-container"></div>
+			</div>
 		</div>
 		<script src="gd.js"></script>
 	</body>
