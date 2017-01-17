@@ -1,212 +1,153 @@
-body
-{
-	background:#333;
+body {
+	background: #333;
 }
-
-pre
-{
-	display:inline;
-	white-space:normal;
+pre {
+	display: inline;
+	white-space: normal;
 }
-
-h1
-{
-	margin-top:0;
+h1 {
+	margin-top: 0;
 }
-
-.game-img
-{
-	margin-bottom:1em;
-	width:100%;
-	display:inline-block;
-	box-shadow:0 2px 2px 0 rgba(0,0,0,.16), 0 0 2px 0 rgba(0,0,0,.12);
-	vertical-align:top;
-}
-
-.game-header
-{
-	display:inline;
-}
-
-.game-body
-{
-	display:inline-block;
-	width:100%;
-	padding-left:0;
-	vertical-align:top;
-}
-
-.game-body:nth-child(n+2)
-{
-	padding-left:1em;
-}
-
-.game-text
-{
-	word-break:break-word;
-}
-
-.game-achievements
-{
-	margin-bottom:1em;
-	padding:1em;
-}
-
-.fa-trophy
-{
-	-webkit-text-stroke:.5px #333;
-	-moz-text-stroke:.5px #333;
-}
-
-.game-status-win,.game-status-1
-{
-	color:#ff3;
-}
-
-.game-status-2
-{
-	color:#ebebeb;
-}
-
-.game-status-3
-{
-	color:#cd7f32;
-}
-
-.game-status-demo
-{
-	color:#fff;
-}
-
-.game-status-disqualified
-{
-	color:red;
-}
-
-.download-icon
-{
-	height:1.5em;
-	margin:8px 0;
-}
-
-.fa.download-icon
-{
-	height:2em;
-	margin:4px 0;
-}
-
-.comp-games
-{
-	background:#e6e6e6;
-	padding:1em;
-}
-
-.comp-number
-{
-	color:#e6e6e6;
-}
-
-.fa
-{
-	vertical-align:middle;
-}
-
-.fa-space
-{
-	margin-left:8px;
-}
-
-.mui-container
-{
-	min-height:100%;
-	overflow-x:hidden;
-	transition:margin-left .2s;
-	padding-bottom:16px;
-}
-
-#sidedrawer
-{
-	max-width:568px;
-	padding-left:15px;
-	padding-right:15px;
-	overflow:auto;
-	z-index:2;
-	transition:transform .2s;
-	margin:50px auto;
-}
-
-.game-body-full
-{
-	width:100%;
-}
-
-#sidedrawer-brand
-{
-	text-align:center;
-}
-
-#sidedrawer li
-{
-	width:100%;
-	padding:.1em 0;
-}
-
-#sidedrawer ul
-{
-	text-align:center;
-	list-style:none;
-	padding:0 0 .2em;
-}
-
-.dl-link
-{
-	background-repeat:no-repeat;
-	background-position:center center;
-	background-size:1.8em;
-	padding:0 2.5em;
-}
-
-.dl-link[href*="yadi.sk"]
-{
-	background-image:url(https://disk.yandex.com/favicon.ico);
-}
-
-.dl-link[href*="docs.google.com"]
-{
-	background-image:url(https://www.google.com/drive/static/images/drive/logo-drive.png);
-}
-
-.comp-header,.sidedrawer-content
-{
-	background:#e6e6e6;
-}
-
-@media (min-width: 768px)
-{
-	.game-img
-	{
-		width:16em;
-		margin:0;
-	}
+.game-img {
+	/*float: left;
+	margin-right: 15px;*/
 	
-	.game-body
-	{
-		width:calc(100%-16em);
+	margin-bottom: 1em;
+	width: 100%;
+	display: inline-block;
+	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .16), 0 0 2px 0 rgba(0, 0, 0, .12);
+	vertical-align: top;
+}
+.game-downloads {
+	/*float:right;*/
+}
+.game-header {
+	display: inline;
+}
+.game-body {
+	display: inline-block;
+	width: 100%;
+	padding-left: 0;
+	vertical-align: top;
+}
+.game-body:nth-child(n+2) {
+	padding-left: 1em;
+}
+.game-text {
+	word-break: break-word;
+}
+.game-achievements {
+	padding: 1em;
+	margin-bottom: 1em;
+}
+.fa-trophy {
+	-webkit-text-stroke: .5px #333;
+	-moz-text-stroke: .5px #333;
+}
+.game-status-win,
+.game-status-1 {
+	color: #ffff33;
+}
+.game-status-2 {
+	color: #ebebeb;
+}
+.game-status-3 {
+	color: #cd7f32;
+}
+.game-status-final {} .game-status-demo {
+	color: #fff;
+}
+.game-status-disqualified {
+	color: red;
+}
+.download-icon {
+	height: 1.5em;
+	margin: 8px 0;
+}
+.fa.download-icon {
+	height: 2em;
+	margin: 4px 0;
+}
+.comp-games {
+	padding: 1em;
+	background: #e6e6e6;
+}
+.comp-header {
+	background: #e6e6e6;
+}
+.comp-number {
+	color: #e6e6e6;
+}
+.fa {
+	vertical-align: middle;
+}
+.fa-space {
+	margin-left: 8px;
+}
+.mui-container {
+	min-height: 100%;
+	overflow-x: hidden;
+	transition: margin-left 0.2s;
+	padding-bottom: 16px;
+}
+.sidedrawer-content {
+	background: #e6e6e6;
+}
+#sidedrawer {
+	max-width: 568px;
+	margin: 50 auto;
+	padding-left: 15px;
+	padding-right: 15px;
+	overflow: auto;
+	z-index: 2;
+	transition: transform 0.2s;
+}
+@media (min-width: 768px) {
+	.game-img {
+		width: 16em;
+		margin: 0;
 	}
-	
-	.main-container
-	{
-		margin-left:200px;
+	.game-body {
+		width: calc(100% - 16em);
 	}
-	
-	#sidedrawer
-	{
-		transform:translate(200px);
-		position:fixed;
-		top:0;
-		bottom:0;
-		width:200px;
-		left:-200px;
-		margin:0;
+	.main-container {
+		margin-left: 200px;
 	}
+	#sidedrawer {
+		margin: 0;
+		transform: translate(200px);
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		width: 200px;
+		left: -200px;
+	}
+}
+.game-body-full {
+	width: 100%;
+}
+#sidedrawer-brand {
+	text-align: center;
+}
+#sidedrawer li {
+	width: 100%;
+	padding: 0.1em 0;
+}
+#sidedrawer ul {
+	text-align: center;
+	padding: 0;
+	padding-bottom: .2em;
+	list-style: none;
+}
+.dl-link {
+	padding: 0 2.5em;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: 1.8em;
+}
+.dl-link[href*="yadi.sk"] {
+	background-image: url(https://disk.yandex.com/favicon.ico);
+}
+.dl-link[href*="docs.google.com"] {
+	background-image: url(https://www.google.com/drive/static/images/drive/logo-drive.png);
 }
