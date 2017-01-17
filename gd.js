@@ -68,7 +68,7 @@ function getComps(comp){
 				else gameBodyEl.append('<i class="fa fa-ban fa-2x mui--pull-right game-status-'+game.status+'" aria-hidden="true"></i>')
 				gameBodyEl.append('<h2 class="game-header"><i class="fa fa-gamepad" aria-hidden="true"></i> '+game.name+'</h2>');
 				if(game.genre) gameBodyEl.append('<br><pre class="game-text">Жанр: '+game.genre+'</pre>');
-				gameBodyEl.append(game.description === undefined ? '<p>Описания нет</p>' : '<p class="game-text">'+game.description+'</p>');
+				gameBodyEl.append(game.description === undefined ? '<p>Описания нет.</p>' : '<p class="game-text">'+game.description+'</p>');
 				if(game.note) gameBodyEl.append('<pre>Примечание: '+game.note+'</pre><br>');
 				var downloads = $('<div class="game-downloads"></div>').appendTo(gameBodyEl);
 				if(game.other_links){
