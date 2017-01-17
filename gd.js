@@ -37,7 +37,7 @@ function getComps(comp){
 			if(twg.themes){
 				for(var j = 0; j<twg.themes.same.length; j++){
 					compEl.append('<h1><i class="fa fa-tag" aria-hidden="true"></i> '+twg.themes.same[j]+'</h1>');
-					if(twg.themes.descriptions) compEl.append(twg.themes.descriptions[j] == '' ? '<p>Описания нет</p>' : '<p class="game-text">'+twg.themes.descriptions[j]+'</p>');
+					if(twg.themes.descriptions) compEl.append(twg.themes.descriptions[j] == '' ? '<p>Описания нет.</p>' : '<p class="game-text">'+twg.themes.descriptions[j]+'</p>');
 				}
 			} else compEl.append('<h1><i class="fa fa-tag" aria-hidden="true"></i> '+twg.theme+'</h1>');
 			compEl.append(twg.description+'<br>');
@@ -50,11 +50,8 @@ function getComps(comp){
 				}
 			}
 			if(twg.note) compEl.append('<pre>Примечание: '+twg.note+'</pre><br>');
-			compEl.append('<pre>Начало конкурса: '+new moment(twg.start, 'X').format('LLL')+'<br>Конец конкурса: '+new moment(twg.end, 'X').format('LLL')+'</pre>');
-			if(twg.archive){
-				compEl.append('<a href="https://yadi.sk/d/'+twg.archive.yadisk+'" target="_blank" class="mui-btn mui-btn--raised"><img src="https://disk.yandex.com/favicon.ico" class="download-icon"/></button>');
-				compEl.append('<a href="https://docs.google.com/uc?id='+twg.archive.gdrive+'&export=download" target="_blank" class="mui-btn mui-btn--raised"><img src="https://www.google.com/drive/static/images/drive/logo-drive.png" class="download-icon"/></button>');
-			}
+			compEl.append('<pre>Начало конкурса: '+new moment(twg.start, 'X').format('LLL')+'<br>Конец конкурса: '+new moment(twg.end, 'X').format('LLL')+'</pre><br>');
+			postlinks(compEl, twg.archive);
 			b.append('<div class="mui--z1 comp-games"></div>');
 			for(var j = 0; j<twg.games.length; j++){
 				var game = twg.games[j];
