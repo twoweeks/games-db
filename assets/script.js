@@ -7,19 +7,20 @@ function genFa(a, b, c, d) {
 
 function postlinks(el, obj, addtext) {
 	if (!obj) return;
-	addtext = $(addtext).addClass('fa-space');
-	if (obj.yadisk) el.append('<a href="https://yadi.sk/d/' + obj.yadisk + '" target="_blank" class="mui-btn mui-btn--raised dl-link"></a>');
-	if (obj.gdrive) el.append('<a href="https://docs.google.com/uc?id=' + obj.gdrive + '&export=download" target="_blank" class="mui-btn mui-btn--raised dl-link"></a>');
-	if (obj.web) el.append('<a href="' + obj.web + '" target="_blank" class="mui-btn mui-btn--raised" rel="nofollow noopener">' + genFa('share', '', 'download-icon') + '</a>');
-	if (obj.github) el.append('<a href="https://github.com/' + obj.github + '" target="_blank" class="mui-btn mui-btn--raised">' + genFa('github', '', 'download-icon') + '</a>');
-	if (obj.gplay) el.append('<a href="https://play.google.com/store/apps/details?id=' + obj.gplay + '" target="_blank" class="mui-btn mui-btn--raised">' + genFa('google', '', 'download-icon') + '</a>');
-	if (obj.itunes) el.append('<a href="https://itunes.apple.com/app/id' + obj.itunes + '" target="_blank" class="mui-btn mui-btn--raised">' + genFa('apple', '', 'download-icon') + '</a>');
-	if (obj.yadisk || obj.gdrive || obj.web || obj.github || obj.gplay || obj.itunes) el.append(addtext);
+	addtext = parseHTML(addtext);
+	if(addtext[0]) addtext[0].classList.add("fa-space");
+	if (obj.yadisk) el.innerHTML += '<a href="https://yadi.sk/d/' + obj.yadisk + '" target="_blank" class="mui-btn mui-btn--raised dl-link"></a>';
+	if (obj.gdrive) el.innerHTML += '<a href="https://docs.google.com/uc?id=' + obj.gdrive + '&export=download" target="_blank" class="mui-btn mui-btn--raised dl-link"></a>';
+	if (obj.web) el.innerHTML += '<a href="' + obj.web + '" target="_blank" class="mui-btn mui-btn--raised" rel="nofollow noopener">' + genFa('share', '', 'download-icon') + '</a>';
+	if (obj.github) el.innerHTML += '<a href="https://github.com/' + obj.github + '" target="_blank" class="mui-btn mui-btn--raised">' + genFa('github', '', 'download-icon') + '</a>';
+	if (obj.gplay) el.innerHTML += '<a href="https://play.google.com/store/apps/details?id=' + obj.gplay + '" target="_blank" class="mui-btn mui-btn--raised">' + genFa('google', '', 'download-icon') + '</a>';
+	if (obj.itunes) el.innerHTML += '<a href="https://itunes.apple.com/app/id' + obj.itunes + '" target="_blank" class="mui-btn mui-btn--raised">' + genFa('apple', '', 'download-icon') + '</a>';
+	if ((obj.yadisk || obj.gdrive || obj.web || obj.github || obj.gplay || obj.itunes) && addtext) for(let i of addtext) el.innerHTML += i.outerHTML;
 }
 
 const infoCDN = 'https://cdn.rawgit.com/twoweeks/db/master/', imgCDN = 'https://113217.selcdn.ru/gd/';
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', ()=>{
 	let compBtn = document.querySelectorAll('.getCompBtn');
 
 	for (let i = 0; i < compBtn.length; i++) {
@@ -41,10 +42,15 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function getComps(comp){
-	$.getJSON(infoCDN + comp, function(result){
-		var reskeys = Object.keys(result),
-		compsList = document.querySelector('#sidedrawer .comps-list'),
-		compsContainer = document.querySelector('.comps-container');
+	let request = new XMLHttpRequest();
+	request.open('GET', infoCDN+comp, true);
+
+	request.onload = function() {
+		if (request.status < 200 || request.status >= 400) return;
+		let result = JSON.parse(request.responseText),
+			reskeys = Object.keys(result),
+			compsList = document.querySelector('#sidedrawer .comps-list'),
+			compsContainer = document.querySelector('.comps-container');
 
 		compsList.innerHTML = '';
 		compsContainer.innerHTML = '';
@@ -64,7 +70,7 @@ function getComps(comp){
 			compsList.innerHTML += '<li><a class="mui-btn mui-btn--raised" href="#comp' + reskeys[i] + '" data-scroll>' + name + ' </a></li>';
 		}
 
-		var b = $('.comps-container');
+		let b = $('.comps-container');//TODO: vanilla here, pls
 
 		for (let i = 0; i < reskeys.length; i++){
 			let twg = result[reskeys[i]];
@@ -123,16 +129,17 @@ function getComps(comp){
 
 				if (game.note) gameBodyEl.append('<pre>Примечание: ' + game.note + '</pre><br>');
 
-				let downloads = $('<div class="game-downloads"></div>').appendTo(gameBodyEl);
+				gameBodyEl[0].innerHTML += '<div class="game-downloads"></div>';
+				let downloads = gameBodyEl[0].querySelector('.game-downloads');
 
 				if (game.other_links) {
 					if (game.other_links.repo) {
 						postlinks(downloads, game.other_links.repo);
-						downloads.append('<div class="mui-divider"></div>');
+						downloads.innerHTML += '<div class="mui-divider"></div>';
 					}
 					if (game.other_links.updated) {
 						postlinks(downloads, game.other_links.updated, genFa('check') + genFa('arrow-circle-up') + '<br>');
-						downloads.append('<div class="mui-divider"></div>');
+						downloads.innerHTML += '<div class="mui-divider"></div>';
 					}
 				}
 
@@ -140,7 +147,7 @@ function getComps(comp){
 
 				if (game.other_links) {
 					if (game.other_links.final_multi) {
-						downloads.append('<div class="mui-divider"></div>');
+						downloads.innerHTML += '<div class="mui-divider"></div>';
 						postlinks(downloads, game.other_links.final_multi.win, genFa('windows') + '<br>');
 						postlinks(downloads, game.other_links.final_multi.win_x64, genFa('windows', '64') + '<br>');
 						postlinks(downloads, game.other_links.final_multi.linux, genFa('linux') + '<br>');
@@ -148,11 +155,11 @@ function getComps(comp){
 						postlinks(downloads, game.other_links.final_multi.android, genFa('android') + '<br>');
 					}
 					if (game.other_links.store) {
-						downloads.append('<div class="mui-divider"></div>');
+						downloads.innerHTML += '<div class="mui-divider"></div>';
 						postlinks(downloads, game.other_links.store, genFa('mobile') + '<br>');
 					}
 					if (game.other_links.demo_multi) {
-						downloads.append('<div class="mui-divider"></div>');
+						downloads.innerHTML += '<div class="mui-divider"></div>';
 						postlinks(downloads, game.other_links.demo_multi.win, genFa('bug') + genFa('windows') + '<br>');
 						postlinks(downloads, game.other_links.demo_multi.win_x64, genFa('bug') + genFa('windows') + '<br>');
 						postlinks(downloads, game.other_links.demo_multi.linux, genFa('bug') + genFa('linux') + '<br>');
@@ -160,15 +167,21 @@ function getComps(comp){
 						postlinks(downloads, game.other_links.demo_multi.android, genFa('bug') + genFa('android') + '<br>');
 					}
 					if (game.other_links.demo_updated) {
-						downloads.append('<div class="mui-divider"></div>');
+						downloads.innerHTML += '<div class="mui-divider"></div>';
 						postlinks(downloads, game.other_links.demo_updated, genFa('bug') + genFa('arrow-circle-up') + '<br>');
 					}
 					if (game.other_links.demo) {
-						downloads.append('<div class="mui-divider"></div>');
+						downloads.innerHTML += '<div class="mui-divider"></div>';
 						postlinks(downloads, game.other_links.demo, genFa('bug') + '<br>');
 					}
 				}
 			}
 		}
-	});
+	}
+	request.send();
 }
+function parseHTML(str) {
+  let tmp = document.implementation.createHTMLDocument();
+  tmp.body.innerHTML = str;
+  return tmp.body.children;
+};
