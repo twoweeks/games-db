@@ -45,10 +45,10 @@ function getComps(comp){
 	let request = new XMLHttpRequest();
 	request.open('GET', infoCDN+comp, true);
 
-	request.onload = function() {
-		if (request.status < 200 || request.status >= 400) return;
-		let result = JSON.parse(request.responseText),
-			reskeys = Object.keys(result),
+	fetch(infoCDN+comp).then((response)=>{
+		return response.json();
+	}).then((result)=>{
+		let reskeys = Object.keys(result),
 			compsList = document.querySelector('#sidedrawer .comps-list'),
 			compsContainer = document.querySelector('.comps-container');
 
@@ -177,8 +177,7 @@ function getComps(comp){
 				}
 			}
 		}
-	}
-	request.send();
+	});
 }
 function parseHTML(str) {
   let tmp = document.implementation.createHTMLDocument();
