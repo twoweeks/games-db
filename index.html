@@ -1,49 +1,44 @@
-<html>
-	<head>
-		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="shortcut icon" href="favicon.ico">
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
-		<script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
-		<link href="//cdn.muicss.com/mui-0.9.9-rc1/css/mui.min.css" rel="stylesheet" type="text/css" />
-		<script src="//cdn.muicss.com/mui-0.9.9-rc1/js/mui.min.js"></script>
-		<script src="https://use.fontawesome.com/3021a5af09.js"></script>
-		<link href="https://use.fontawesome.com/3021a5af09.css" rel="stylesheet" type="text/css" />
-		<link href="gdstyles.css" rel="stylesheet" type="text/css" />
-	</head>
-	<body>
-		<div id="sidedrawer" class="mui--no-user-select">
-			<div class="sidedrawer-content">
-				<div id="sidedrawer-brand" class="mui--appbar-line-height">
-					<span class="mui--text-title">
-						<a href="https://2ch.hk/gd" class="mui--text-center" target="_blank">/gd/</a>
-					</span>
-				</div>
-				<div class="mui-divider"></div>
-				<ul></ul>
+<!DOCTYPE html>
+<html><head>
+	<meta charset="utf-8">
+	<title>Игры конкурсов /gd</title>
+	<link rel="shortcut icon" href="favicon.ico">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/muicss/0.9.8/css/mui.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+	<link rel="stylesheet" href="assets/style.css">
+</head><body>
+	<div id="sidedrawer" class="mui--no-user-select">
+		<div class="sidedrawer-content">
+			<div id="sidedrawer-brand" class="mui--appbar-line-height">
+				<span class="mui--text-title"><a href="https://2ch.hk/gd/" class="mui--text-center" target="_blank">/gd/</a></span>
 			</div>
+			<div class="mui-divider"></div>
+			<ul class="comps-list"></ul>
 		</div>
-		<div class="main-container">
-			<div class="mui-container">
-				<div class="mui-panel comp-select-container">
-					<h2>Выбор конкурсов</h2>
-					<div style="width: 100%" class="mui-dropdown">
-						<button style="width: 100%" class="mui-btn" data-mui-toggle="dropdown">
-							Конкурс
-							<span class="mui-caret"></span>
-						</button>
-						<ul style="width: 100%" class="mui-dropdown__menu">
-							<li><a href="#" onclick="getComps('twg.json')">Two Weeks Game</a></li>
-							<li><a href="#" onclick="getComps('ttwg.json')">Two Two Weeks Game</a></li>
-							<li><a href="#" onclick="getComps('three-dg.json')">Three Days Game</a></li>
-							<li><a href="#" onclick="getComps('two-dg.json')">Two Days Game</a></li>
-						</ul>
-					</div>
+	</div>
+	<div class="main-container">
+		<div class="mui-container">
+			<div class="mui-panel comp-select-container">
+				<h2>Выбор конкурсов</h2>
+				<div style="width: 100%" class="mui-dropdown">
+					<button style="width: 100%" class="mui-btn" data-mui-toggle="dropdown">Конкурс<span class="mui-caret"></span></button>
+					<ul style="width: 100%" class="mui-dropdown__menu">
+						<li><a href="javascript:void(0);" class="getCompBtn" data-comp="twg.json">Two Weeks Game</a></li>
+						<li><a href="javascript:void(0);" class="getCompBtn" data-comp="ttwg.json">Two Two Weeks Game</a></li>
+						<li><a href="javascript:void(0);" class="getCompBtn" data-comp="three-dg.json">Three Days Game</a></li>
+						<li><a href="javascript:void(0);" class="getCompBtn" data-comp="two-dg.json">Two Days Game</a></li>
+					</ul>
 				</div>
-				<div class="comps-container"></div>
 			</div>
+			<div class="comps-container"></div>
 		</div>
-		<script src="gd.js"></script>
-	</body>
-</html>
+	</div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js" defer></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/muicss/0.9.8/js/mui.min.js" defer></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js" defer></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/locale/ru.js" defer></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/smooth-scroll/10.2.1/js/smooth-scroll.min.js" defer></script>
+	<script src="assets/script.js" defer></script>
+</body></html>

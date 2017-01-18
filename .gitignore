@@ -17,3 +17,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Minified files
+*.min.*
