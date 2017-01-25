@@ -5,6 +5,18 @@ function genFa(a, b, c, d) {
 	return '<i class="fa fa-' + type + check2x + cls + '" aria-hidden="true">' + content + '</i>';
 }
 
+function _create(a, b) {
+	let elem = document.createElement(a);
+	if (b) elem.classList.add(b);
+	return elem;
+}
+
+function parseHTML(str) {
+  let tmp = document.implementation.createHTMLDocument();
+  tmp.body.innerHTML = str;
+  return tmp.body.children;
+};
+
 function postlinks(el, obj, addtext) {
 	if (!obj) return;
 	addtext = parseHTML(addtext);
@@ -18,7 +30,7 @@ function postlinks(el, obj, addtext) {
 	if ((obj.yadisk || obj.gdrive || obj.web || obj.github || obj.gplay || obj.itunes) && addtext) for(let i of addtext) el.innerHTML += i.outerHTML;
 }
 
-const infoCDN = 'https://cdn.rawgit.com/twoweeks/db/master/', imgCDN = 'https://113217.selcdn.ru/gd/';
+const infoCDN = 'https://raw.githubusercontent.com/twoweeks/db/master/', imgCDN = 'https://113217.selcdn.ru/gd/';
 
 document.addEventListener('DOMContentLoaded', ()=>{
 	let compBtn = document.querySelectorAll('.getCompBtn');
@@ -41,16 +53,11 @@ document.addEventListener('DOMContentLoaded', ()=>{
 	});
 });
 
-function getComps(comp){
-	let request = new XMLHttpRequest();
-	request.open('GET', infoCDN+comp, true);
-
-	fetch(infoCDN+comp).then((response)=>{
+function getComps(comp) {
+	fetch(infoCDN + comp).then((response)=>{
 		return response.json();
 	}).then((result)=>{
-		let reskeys = Object.keys(result),
-			compsList = document.querySelector('#sidedrawer .comps-list'),
-			compsContainer = document.querySelector('.comps-container');
+		let reskeys = Object.keys(result), compsList = document.querySelector('#sidedrawer .comps-list'), compsContainer = document.querySelector('.comps-container');
 
 		compsList.innerHTML = '';
 		compsContainer.innerHTML = '';
@@ -70,7 +77,7 @@ function getComps(comp){
 			compsList.innerHTML += '<li><a class="mui-btn mui-btn--raised" href="#comp' + reskeys[i] + '" data-scroll>' + name + ' </a></li>';
 		}
 
-		let b = $('.comps-container');//TODO: vanilla here, pls
+		let b = $('.comps-container'); // @TODO vanilla here, pls
 
 		for (let i = 0; i < reskeys.length; i++){
 			let twg = result[reskeys[i]];
@@ -80,10 +87,10 @@ function getComps(comp){
 
 			if (twg.themes) {
 				for (let i = 1; i < twg.themes.same.length; i++) {
-					compEl.append('<h1><i class="fa fa-tag" aria-hidden="true"></i> ' + twg.themes.same[i] + '</h1>');
+					compEl.append('<h1>' + genFa('tag', '', '', !1) + ' ' + twg.themes.same[i] + '</h1>');
 					if (twg.themes.descriptions) compEl.append(twg.themes.descriptions[i] == '' ? '<p>Описания нет.</p>' : '<p class="game-text">' + twg.themes.descriptions[i] + '</p>');
 				}
-			} else compEl.append('<h1><i class="fa fa-tag" aria-hidden="true"></i> ' + twg.theme + '</h1>');
+			} else compEl.append('<h1>' + genFa('tag', '', '', !1) + ' ' + twg.theme + '</h1>');
 
 			if (twg.description) compEl.append(twg.description + '<br>');
 
@@ -92,7 +99,7 @@ function getComps(comp){
 				achievements = $('<div class="mui--z1 game-achievements"></div>').appendTo(achievements);
 
 				for (let i = 0; i < twg.achievements.same.length; i++) {
-					achievements.append('<h4><i class="fa fa-star" aria-hidden="true"></i> ' + twg.achievements.same[i] + '</h4>');
+					achievements.append('<h4>' + genFa('star', '', '', !1) + ' ' + twg.achievements.same[i] + '</h4>');
 					if (twg.achievements.descriptions) achievements.append(twg.achievements.descriptions[i] == '' ? '<p>Описания нет.</p>' : '<p class="game-text">' + twg.achievements.descriptions[i] + '</p>');
 				}
 			}
@@ -113,14 +120,40 @@ function getComps(comp){
 					continue;
 				}
 
-				let gameEl = $('<div class="mui-panel"></div>').appendTo(b.children().last()), gameBodyEl = $('<div class="game-body"></div>');
+				let gameEl = $('<div class="mui-panel"></div>').appendTo(b.children().last()), gameBodyEl = $('<div class="game-body"></div>'), gameImage = _create('img', 'game-img'), gameStatus;
 
-				if (game.image) gameEl.append('<img src="' + imgCDN + game.image + '" class="game-img" onerror="$(this).next().addClass("game-body-full"); $(this).remove();" onclick="window.open(this.src)">')
-				else gameBodyEl.addClass('game-body-full');
+				switch (game.image) {
+					case '':
+					case undefined:
+						gameBodyEl.addClass('game-body-full');
+						break;
+					default:
+						gameImage.setAttribute('src', imgCDN + game.image);
+						gameImage.addEventListener('click', function() { window.open(this.src) });
+						gameEl.append(gameImage);
+				}
 
 				gameBodyEl.appendTo(gameEl);
 
-				if (game.status != 'disqualified') gameBodyEl.append(genFa('trophy', '', 'mui--pull-right game-status-' + game.status));
+				switch (game.status) {
+					case 'disqualified':
+						gameStatus = 'Дисквалификация';
+						break;
+					case 'win':
+					case '1':
+						gameStatus = 'Победитель';
+						break;
+					case 'final':
+						gameStatus = 'Финалист';
+						break;
+					case 'demo':
+						gameStatus = 'Демо-версия';
+						break;
+					default:
+						gameStatus = game.status + ' место';
+				}
+
+				if (game.status != 'disqualified') gameBodyEl.append('<span title="' + gameStatus + '">' + genFa('trophy', '', 'mui--pull-right game-status-' + game.status) + '</span>');
 				else gameBodyEl.append(genFa('ban', '', 'mui--pull-right game-status-' + game.status))
 				gameBodyEl.append('<h2 class="game-header">' + genFa('gamepad', '', '', !1) + ' ' + game.name + '</h2>');
 
@@ -179,8 +212,3 @@ function getComps(comp){
 		}
 	});
 }
-function parseHTML(str) {
-  let tmp = document.implementation.createHTMLDocument();
-  tmp.body.innerHTML = str;
-  return tmp.body.children;
-};

@@ -102,12 +102,22 @@ h1 {
 	color: #e6e6e6;
 }
 
+.comp-number:not(:first-child) {
+	margin-top: 10px;
+}
+
 .fa {
 	vertical-align: middle;
+	user-select: none;
+	cursor: default;
+}
+
+.fa:not(:empty)::before {
+	margin-right: 5px;
 }
 
 .fa-space {
-	margin-left: 8px;
+	margin-left: 10px;
 }
 
 .main-container {
