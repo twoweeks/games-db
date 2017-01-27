@@ -2,6 +2,10 @@
 	box-sizing: border-box;
 }
 
+html, body {
+	width: 100%; height: 100%;
+}
+
 body {
 	background-color: #333;
 	font-family: Roboto, Arial, Verdana, Tahoma, sans-serif;
@@ -14,6 +18,25 @@ pre {
 
 h1 {
 	margin-top: 0;
+}
+
+.headline {
+	text-align: center;
+	margin: 0 0 10px;
+}
+
+.loading {
+	text-align: center;
+	font-size: 2em;
+	color: #fff;
+}
+
+noscript {
+	display: block;
+}
+
+noscript .loading {
+	display: inherit !important;
 }
 
 .game-img {
@@ -40,6 +63,10 @@ h1 {
 	padding-left: 1em;
 }
 
+.game-body .game-text {
+	margin-top: .5em;
+}
+
 .game-text {
 	word-break: break-word;
 }
@@ -52,6 +79,17 @@ h1 {
 .fa-trophy {
 	-webkit-text-stroke: .5px #333;
 	-moz-text-stroke: .5px #333;
+}
+
+.getCompsList li .getCompBtn {
+	text-align: center;
+	padding: .5em 0;
+	font-size: 1.2em;
+	border-bottom: 1px solid #EEE;
+}
+
+.getCompsList  li:last-child .getCompBtn:last-child {
+	border-bottom: 0;
 }
 
 .game-status-win,
@@ -123,22 +161,34 @@ h1 {
 .main-container {
 	min-height: 100%;
 	overflow-x: hidden;
-	transition: margin-left 0.2s;
 	padding-bottom: 16px;
 }
 
-.sidedrawer-content {
+.comps-nav {
+	max-width: 568px;
+	margin: 0 auto;
+	padding: 0;
+	overflow-y: hidden;
+}
+
+.comps-nav-content {
 	background: #e6e6e6;
 }
 
-#sidedrawer {
-	max-width: 568px;
-	margin: 0 auto;
-	padding-left: 15px;
-	padding-right: 15px;
-	overflow: auto;
-	z-index: 2;
-	transition: transform 0.2s;
+.comps-nav ul {
+	text-align: center;
+	background: #e6e6e6;
+	padding: 0 0 .2em;
+	list-style: none;
+}
+
+.comps-nav ul:empty {
+	display: none;
+}
+
+.comps-nav li {
+	width: 100%;
+	padding: .1em 0;
 }
 
 @media (min-width: 768px) {
@@ -155,12 +205,12 @@ h1 {
 		margin-left: 200px;
 	}
 
-	#sidedrawer {
+	.comps-nav {
 		margin: 0;
 		transform: translate(200px);
 		position: fixed;
-		top: 0;
-		bottom: 0;
+		padding: 0 15px;
+		top: 0;	bottom: 0;
 		width: 200px;
 		left: -200px;
 	}
@@ -170,33 +220,21 @@ h1 {
 	width: 100%;
 }
 
-#sidedrawer-brand {
-	text-align: center;
-}
-
-#sidedrawer li {
-	width: 100%;
-	padding: 0.1em 0;
-}
-
-#sidedrawer ul {
-	text-align: center;
-	padding: 0;
-	padding-bottom: .2em;
-	list-style: none;
-}
-
 .dl-link {
-	padding: 0 2.5em;
+	padding: 0 2.7em;
 	background-repeat: no-repeat;
 	background-position: center center;
 	background-size: 1.8em;
 }
 
-.dl-link[href*="yadi.sk"] {
+.dl-link[href*='yadi.sk'] {
 	background-image: url(https://disk.yandex.com/favicon.ico);
 }
 
-.dl-link[href*="docs.google.com"] {
+.dl-link[href*='docs.google.com'] {
 	background-image: url(https://www.google.com/drive/static/images/drive/logo-drive.png);
+}
+
+.dl-link[href*='gamejolt.com'] {
+	background-image: url(http://113217.selcdn.ru/gd/other/gamejolt-logo.png);
 }
