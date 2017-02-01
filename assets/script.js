@@ -2,12 +2,12 @@
 
 function genFa(a, b, c, d) {
 	let type = !a ? 'question' : a,	content = !b ? '' : b,	cls = !c ? '' : ' ' + c, check2x = (!d && d !== !1) ? ' fa-2x' : '';
-	return '<i class="fa fa-' + type + check2x + cls + '" aria-hidden="true">' + content + '</i>';
+	return `<i class="fa fa-${type}${check2x}${cls}" aria-hidden="true">${content}</i>`;
 }
 
 function genDlLink(a, b, c) {
 	let link = !a ? 'javascript:void(0);' : a,	content = !b ? '' : b,	cls = !c ? '' : ' ' + c;
-	return '<a href="' + link + '" target="_blank" class="mui-btn mui-btn--raised ' + cls + '" rel="nofollow noopener">' + content + '</a>';
+	return `<a href="${link}" target="_blank" class="mui-btn mui-btn--raised ${cls}" rel="nofollow noopener">${content}</a>`;
 }
 
 function genElem(a, b) {
@@ -26,12 +26,12 @@ function postLinks(el, obj, addtext) {
 	if (!obj) return;
 	addtext = parseHTML(addtext);
 	if (addtext[0]) addtext[0].classList.add("fa-space");
-	if (obj.yadisk) el.innerHTML += genDlLink('https://yadi.sk/d/' + obj.yadisk, '', 'dl-link');
-	if (obj.gdrive) el.innerHTML += genDlLink('https://docs.google.com/uc?id=' + obj.gdrive, '', 'dl-link');
+	if (obj.yadisk) el.innerHTML += genDlLink(`https://yadi.sk/d/${obj.yadisk}`, '', 'dl-link');
+	if (obj.gdrive) el.innerHTML += genDlLink(`https://docs.google.com/uc?id=${obj.gdrive}`, '', 'dl-link');
 	if (obj.web) el.innerHTML += genDlLink(obj.web, genFa('share', '', 'download-icon'));
-	if (obj.github) el.innerHTML += genDlLink('https://github.com/' + obj.github, genFa('github', '', 'download-icon'));
-	if (obj.gplay) el.innerHTML += genDlLink('https://play.google.com/store/apps/details?id=' + obj.gplay, genFa('google', '', 'download-icon'));
-	if (obj.itunes) el.innerHTML += genDlLink('https://itunes.apple.com/app/id' + obj.itunes, genFa('apple', '', 'download-icon'));;
+	if (obj.github) el.innerHTML += genDlLink(`https://github.com/${obj.github}`, genFa('github', '', 'download-icon'));
+	if (obj.gplay) el.innerHTML += genDlLink(`https://play.google.com/store/apps/details?id=${obj.gplay}`, genFa('google', '', 'download-icon'));
+	if (obj.itunes) el.innerHTML += genDlLink(`https://itunes.apple.com/app/id${obj.itunes}`, genFa('apple', '', 'download-icon'));;
 	if ((obj.yadisk || obj.gdrive || obj.web || obj.github || obj.gplay || obj.itunes) && addtext) for (let i of addtext) el.innerHTML += i.outerHTML;
 }
 
@@ -82,24 +82,24 @@ function getComps(comp) {
 				result[reskeys[i]].note = res.note;
 			}
 
-			let name = 'Конкурс №' + reskeys[i];
-			compsList.innerHTML += '<li><a class="mui-btn mui-btn--raised" href="#comp' + reskeys[i] + '" data-scroll>' + name + ' </a></li>';
+			let name = `Конкурс №${reskeys[i]}`;
+			compsList.innerHTML += `<li><a class="mui-btn mui-btn--raised" href="#comp${reskeys[i]}" data-scroll>${name}</a></li>`;
 		}
 
 		let b = $('.comps-container'); // @TODO vanilla here, pls
 
 		for (let i = 0; i < reskeys.length; i++) {
 			let twg = result[reskeys[i]];
-			b.append('<h1 id="comp' + reskeys[i] + '" class="comp-number">Конкурс №' + reskeys[i] + '</h1>');
+			b.append(`<h1 id="comp${reskeys[i]}" class="comp-number">Конкурс №${reskeys[i]}</h1>`);
 
 			let compEl = $('<div class="mui-panel comp-header"></div>').appendTo(b);
 
 			if (twg.themes) {
 				for (let i = 0; i < twg.themes.same.length; i++) {
-					compEl.append('<h1>' + genFa('tag', '', '', !1) + ' ' + twg.themes.same[i] + '</h1>');
-					if (twg.themes.descriptions) compEl.append(twg.themes.descriptions[i] == '' ? '<p>Описания нет.</p>' : '<p class="game-text">' + twg.themes.descriptions[i] + '</p>');
+					compEl.append(`<h1>${genFa('tag', '', '', !1)} ${twg.themes.same[i]}</h1>`);
+					if (twg.themes.descriptions) compEl.append(twg.themes.descriptions[i] == '' ? '<p>Описания нет.</p>' : `<p class="game-text">${twg.themes.descriptions[i]}</p>`);
 				}
-			} else compEl.append('<h1>' + genFa('tag', '', '', !1) + ' ' + twg.theme + '</h1>');
+			} else compEl.append(`<h1>${genFa('tag', '', '', !1)} ${twg.theme}</h1>`);
 
 			if (twg.description) compEl.append(twg.description + '<br>');
 
@@ -108,14 +108,14 @@ function getComps(comp) {
 				achievements = $('<div class="mui--z1 game-achievements"></div>').appendTo(achievements);
 
 				for (let i = 0; i < twg.achievements.same.length; i++) {
-					achievements.append('<h4>' + genFa('star', '', '', !1) + ' ' + twg.achievements.same[i] + '</h4>');
-					if (twg.achievements.descriptions) achievements.append(twg.achievements.descriptions[i] == '' ? '<p>Описания нет.</p>' : '<p class="game-text">' + twg.achievements.descriptions[i] + '</p>');
+					achievements.append(`<h4>${genFa('star', '', '', !1)} ${twg.achievements.same[i]}</h4>`);
+					if (twg.achievements.descriptions) achievements.append(twg.achievements.descriptions[i] == '' ? '<p>Описания нет.</p>' : `<p class="game-text">${twg.achievements.descriptions[i]}</p>`);
 				}
 			}
 
-			if (twg.note) compEl.append('<pre>Примечание: ' + twg.note + '</pre><br>');
+			if (twg.note) compEl.append(`<pre>Примечание: ${twg.note}</pre><br>`);
 
-			compEl.append('<br><pre>Начало конкурса: ' + new moment(twg.start, 'X').format('LLL') + '<br>Конец конкурса: ' + new moment(twg.end, 'X').format('LLL') + '</pre><br>');
+			compEl.append(`<br><pre>Начало конкурса: ${new moment(twg.start, 'X').format('LLL')}<br>Конец конкурса: ${new moment(twg.end, 'X').format('LLL')}</pre><br>`);
 
 			postLinks(compEl, twg.archive);
 
@@ -147,7 +147,7 @@ function getComps(comp) {
 				switch (game.status) {
 					case 'disqualified':
 						gameStatus = 'Дисквалификация';
-						gameBodyEl.append('<span title="' + gameStatus + '">' + genFa('ban', '', 'mui--pull-right game-status-' + game.status) + '</span>')
+						gameBodyEl.append(`<span title="${gameStatus}">${genFa('ban', '', 'mui--pull-right game-status-' + game.status)}</span>`)
 						break;
 					case 'win':
 					case '1':
@@ -160,16 +160,16 @@ function getComps(comp) {
 						gameStatus = 'Демо-версия';
 						break;
 					default:
-						gameStatus = game.status + ' место';
+						gameStatus = `${game.status} место`;
 				}
 
-				if (game.status != 'disqualified') gameBodyEl.append('<span title="' + gameStatus + '">' + genFa('trophy', '', 'mui--pull-right game-status-' + game.status) + '</span>');
-				gameBodyEl.append('<h2 class="game-header">' + genFa('gamepad', '', '', !1) + ' ' + game.name + '</h2>');
+				if (game.status != 'disqualified') gameBodyEl.append(`<span title="${gameStatus}">${genFa('trophy', '', `mui--pull-right game-status-${game.status}`)}</span>`);
+				gameBodyEl.append(`<h2 class="game-header">${genFa('gamepad', '', '', !1)} ${game.name}</h2>`);
 
-				if (game.genre) gameBodyEl.append('<br><pre class="game-text">Жанр: ' + game.genre + '</pre>');
-				gameBodyEl.append(game.description === undefined ? '<p>Описания нет.</p>' : '<p class="game-text">' + game.description.replace(/\n/g, "<br>") + '</p>');
+				if (game.genre) gameBodyEl.append(`<br><pre class="game-text">Жанр: ${game.genre}</pre>`);
+				gameBodyEl.append(game.description === undefined ? '<p>Описания нет.</p>' : `<p class="game-text">${game.description.replace(/\n/g, "<br>")}</p>`);
 
-				if (game.note) gameBodyEl.append('<pre>Примечание: ' + game.note + '</pre><br>');
+				if (game.note) gameBodyEl.append(`<pre>Примечание: ${game.note}</pre><br>`);
 
 				gameBodyEl[0].innerHTML += '<div class="game-downloads"></div>';
 				let downloads = gameBodyEl[0].querySelector('.game-downloads');
@@ -180,11 +180,11 @@ function getComps(comp) {
 						downloads.innerHTML += '<div class="mui-divider"></div>';
 					}
 					if (game.other_links.gamejolt) {
-						downloads.innerHTML += genDlLink('http://gamejolt.com/games/' + game.other_links.gamejolt, '', 'dl-link') + genFa('desktop', '', 'fa-space');
+						downloads.innerHTML += genDlLink(`http://gamejolt.com/games/${game.other_links.gamejolt}`, '', 'dl-link') + genFa('desktop', '', 'fa-space');
 						downloads.innerHTML += '<div class="mui-divider"></div>';
 					}
 					if (game.other_links.updated) {
-						postLinks(downloads, game.other_links.updated, genFa('check') + genFa('arrow-circle-up') + '<br>');
+						postLinks(downloads, game.other_links.updated, `${genFa('check')}${genFa('arrow-circle-up')}<br>`);
 						downloads.innerHTML += '<div class="mui-divider"></div>';
 					}
 				}
