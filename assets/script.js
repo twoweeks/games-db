@@ -17,9 +17,9 @@ function genElem(a, b) {
 }
 
 function parseHTML(str) {
-  let tmp = document.implementation.createHTMLDocument();
-  tmp.body.innerHTML = str;
-  return tmp.body.children;
+	let tmp = document.implementation.createHTMLDocument();
+	tmp.body.innerHTML = str;
+	return tmp.body.children;
 };
 
 function postLinks(el, obj, addtext) {
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		});
 	}
 
-	getComps('twg.json');
+	getComps('twg');
 
 	smoothScroll.init({
 		selector: '[data-scroll]',
@@ -66,7 +66,7 @@ function getComps(comp) {
 	compsList.innerHTML = '';
 	compsContainer.innerHTML = '';
 
-	fetch(infoCDN + comp).then((response) => {
+	fetch(infoCDN + comp + '.json').then((response) => {
 		return response.json();
 	}).then((result) => {
 		let reskeys = Object.keys(result);
@@ -231,6 +231,6 @@ function getComps(comp) {
 			compsContainer.appendChild(loadingElem);
 		}
 
-		loadingElem.textContent = 'Сервер GitHub сейчас недоступен.';
+		loadingElem.textContent = 'Ошибка загрузки.';
 	});
 }
