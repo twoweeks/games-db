@@ -97,11 +97,11 @@ function getComps(comp) {
 			if (twg.themes) {
 				for (let i = 0; i < twg.themes.same.length; i++) {
 					compEl.append(`<h1>${genFa('tag', '', '', !1)} ${twg.themes.same[i]}</h1>`);
-					if (twg.themes.descriptions) compEl.append(twg.themes.descriptions[i] == '' ? '<p>Описания нет.</p>' : `<p class="game-text">${twg.themes.descriptions[i]}</p>`);
+					if (twg.themes.descriptions) compEl.append(twg.themes.descriptions[i] == '' ? '<p>Описания нет.</p>' : `<p class="game-text">${twg.themes.descriptions[i].replace(/\n/g, '<br>')}</p>`);
 				}
 			} else compEl.append(`<h1>${genFa('tag', '', '', !1)} ${twg.theme}</h1>`);
 
-			if (twg.description) compEl.append(twg.description + '<br>');
+			if (twg.description) compEl.append(twg.description.replace(/\n/g, '<br>') + '<br>');
 
 			if (twg.achievements) {
 				let achievements = $('<details><summary class="mui-btn mui-btn--raised">Ачивки</summary></details>').appendTo(compEl);
@@ -167,7 +167,7 @@ function getComps(comp) {
 				gameBodyEl.append(`<h2 class="game-header">${genFa('gamepad', '', '', !1)} ${game.name}</h2>`);
 
 				if (game.genre) gameBodyEl.append(`<br><pre class="game-text">Жанр: ${game.genre}</pre>`);
-				gameBodyEl.append(game.description === undefined ? '<p>Описания нет.</p>' : `<p class="game-text">${game.description.replace(/\n/g, "<br>")}</p>`);
+				gameBodyEl.append(game.description === undefined ? '<p>Описания нет.</p>' : `<p class="game-text">${game.description.replace(/\n/g, '<br>')}</p>`);
 
 				if (game.note) gameBodyEl.append(`<pre>Примечание: ${game.note}</pre><br>`);
 
