@@ -1,18 +1,23 @@
 * {
 	box-sizing: border-box;
+	padding: 0; margin: 0; outline: 0;
 }
 
 html, body {
 	width: 100%; height: 100%;
 }
 
+:root {
+	--font-family: Roboto, Arial, Verdana, Tahoma, sans-serif;
+}
+
 body {
 	background-color: #333;
-	font-family: Roboto, Arial, Verdana, Tahoma, sans-serif;
+	font-family: var(--font-family);
 }
 
 pre {
-	display: inline;
+	margin: 0;
 	white-space: normal;
 }
 
@@ -63,17 +68,47 @@ noscript .loading {
 	padding-left: 1em;
 }
 
-.game-body .game-text {
+.game-body .p-text {
 	margin-top: .5em;
 }
 
-.game-text {
+.p-text {
 	word-break: break-word;
+}
+
+.p-text:empty:before {
+	content: 'Описания нет.';
 }
 
 .game-achievements {
 	padding: 1em;
-	margin-bottom: 1em;
+	margin: 5px 0;
+}
+
+.ach-description {
+	background-color: rgba(125, 125, 125, 0.1);
+	padding: 5px 10px;
+	margin-bottom: 10px;
+}
+
+.ach-description:last-child {
+	margin-bottom: 0;
+}
+
+.ach-gift:before {
+	content: 'Приз: ';
+}
+
+.ach-gift:empty:before {
+	content: 'Приза нет.';
+}
+
+.ach-win:before {
+	content: 'Победитель: ';
+}
+
+.ach-win:empty:before {
+	content: 'Победителя нет.';
 }
 
 .fa-trophy {
@@ -113,6 +148,18 @@ noscript .loading {
 	color: red;
 }
 
+.game-genre:before {
+	content: 'Жанр: ';
+}
+
+.game-tools:before {
+	content: 'Сделано с помощью: ';
+}
+
+.p-note:before {
+	content: 'Примечание: ';
+}
+
 .download-icon {
 	height: 1.5em;
 	margin: 8px 0;
@@ -125,23 +172,31 @@ noscript .loading {
 
 .comp-games {
 	padding: 1em;
-	background: #e6e6e6;
+	background-color: #e6e6e6;
 }
 
 .comp-header {
-	background: #e6e6e6;
-}
-
-.comp-select-container{
-	background: #e6e6e6;
+	background-color: #e6e6e6;
 }
 
 .comp-number {
 	color: #e6e6e6;
 }
 
+.comp-number:before {
+	content: 'Конкурс №';
+}
+
 .comp-number:not(:first-child) {
 	margin-top: 10px;
+}
+
+.comp-date-start:before {
+	content: 'Начало конкурса: ';
+}
+
+.comp-date-end:before {
+	content: 'Конец конкурса: ';
 }
 
 .fa {
@@ -154,8 +209,12 @@ noscript .loading {
 	margin-right: 5px;
 }
 
+.fa span {
+	font-family: var(--font-family);
+}
+
 .fa-space {
-	margin-left: 10px;
+	margin: 0 5px 0 10px;
 }
 
 .main-container {
@@ -171,13 +230,9 @@ noscript .loading {
 	overflow-y: hidden;
 }
 
-.comps-nav-content {
-	background: #e6e6e6;
-}
-
 .comps-nav ul {
 	text-align: center;
-	background: #e6e6e6;
+	background-color: #e6e6e6;
 	padding: 0 0 .2em;
 	list-style: none;
 }
@@ -228,13 +283,13 @@ noscript .loading {
 }
 
 .dl-link[href*='yadi.sk'] {
-	background-image: url(https://disk.yandex.com/favicon.ico);
+	background-image: url('https://113217.selcdn.ru/gd/other/yadisk-logo.png');
 }
 
 .dl-link[href*='docs.google.com'] {
-	background-image: url(https://www.google.com/drive/static/images/drive/logo-drive.png);
+	background-image: url('https://113217.selcdn.ru/gd/other/gdrive-logo.png');
 }
 
 .dl-link[href*='gamejolt.com'] {
-	background-image: url(https://113217.selcdn.ru/gd/other/gamejolt-logo.png);
+	background-image: url('https://113217.selcdn.ru/gd/other/gamejolt-logo.png');
 }
