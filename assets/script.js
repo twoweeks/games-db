@@ -1,12 +1,12 @@
 'use strict'
 
 var $gen = {
-	elem: function(a, b) {
+	elem: (a, b) => {
 		let elem = document.createElement(a)
-		if (b) elem.setAttribute('class', b);
+		if (b) elem.setAttribute('class', b)
 		return elem
 	},
-	fa: function(a, b, c, d) {
+	fa: (a, b, c, d) => {
 		let
 			type = !a ? 'question' : a,
 			content = !b ? '' : b,
@@ -15,15 +15,15 @@ var $gen = {
 
 		return `<i class="fa fa-${type}${check2x}${cls}" aria-hidden="true">${content}</i>`
 	},
-	dlLink: function(a, b, c) {
+	dlLink: (a, b, c) => {
 		let
-			link = !a ? 'javascript:void(0);' : a,
+			link = !a ? 'javascript:void(0)' : a,
 			content = !b ? '' : b,
 			cls = !c ? '' : ' ' + c
 
-		return `<a href="${link}" target="_blank" class="mui-btn mui-btn--raised ${cls}" rel="nofollow noopener">${content}</a>`
+		return `<a href="${link}" class="mui-btn mui-btn--raised ${cls}" target="_blank" rel="nofollow noopener">${content}</a>`
 	},
-	postLinks: function(el, obj, addtext) {
+	postLinks: (el, obj, addtext) => {
 		if (!obj) return;
 
 		addtext = $gen.html(addtext)
@@ -37,37 +37,35 @@ var $gen = {
 		if (obj.itunes) el.innerHTML += $gen.dlLink(`https://itunes.apple.com/app/id${obj.itunes}`, $gen.fa('apple', '', 'download-icon'))
 		if ((obj.yadisk || obj.gdrive || obj.web || obj.github || obj.gplay || obj.itunes) && addtext) for (let i of addtext) el.innerHTML += i.outerHTML
 	},
-	html: function(str) {
+	html: (str) => {
 		let tmp = document.implementation.createHTMLDocument()
 		tmp.body.innerHTML = str
 		return tmp.body.children
 	}
 }
 
-
-
 const
-	infoCDN = 'https://raw.githubusercontent.com/twoweeks/db/master/',
+	infoCDN = 'https://raw.githubusercontent.com/twoweeks/db/cfde47f907fd9b923e62e16d4c88acd3e0d01620/',
+	//infoCDN = 'https://raw.githubusercontent.com/twoweeks/db/master/',
 	imgCDN = 'https://113217.selcdn.ru/gd/'
 
 document.addEventListener('DOMContentLoaded', () => {
 	let compBtn = document.querySelectorAll('.getCompBtn')
 
 	for (let i = 0; i < compBtn.length; i++) {
-		compBtn[i].setAttribute('href', 'javascript:void(0);')
-		compBtn[i].addEventListener('click', function(e) {
+		compBtn[i].setAttribute('href', 'javascript:void(0)')
+		compBtn[i].onclick = function(e) {
 			e.preventDefault()
 			getComps(this.dataset.comp)
-		})
+		}
 	}
 
 	getComps('twg')
 
 	smoothScroll.init({
 		selector: '[data-scroll]',
-		speed: 1000,
 		easing: 'easeInOutCubic',
-		offset: 0
+		speed: 1000, offset: 0
 	})
 })
 
@@ -78,12 +76,10 @@ function getComps(comp) {
 		compsList = document.querySelector('.comps-list'),
 		compsContainer = document.querySelector('.comps-container')
 
-	compsList.innerHTML = ''
-	compsContainer.innerHTML = ''
+	compsList.textContent = ''
+	compsContainer.textContent = ''
 
-	fetch(infoCDN + comp + '.json').then((response) => {
-		return response.json()
-	}).then((result) => {
+	fetch(infoCDN + comp + '.json').then(response => response.json()).then(result => {
 		let reskeys = Object.keys(result)
 
 		for (let i = 0; i < reskeys.length; i++) {
@@ -96,56 +92,56 @@ function getComps(comp) {
 				result[reskeys[i]] = res.coalition
 				result[reskeys[i]].note = res.note
 			}
-
-			let name = `Конкурс №${reskeys[i]}`
-			compsList.innerHTML += `<li><a class="mui-btn mui-btn--raised" href="#comp${reskeys[i]}" data-scroll>${name}</a></li>`
 		}
 
 		let b = $('.comps-container') // @TODO vanilla here, pls
 
-		for (let i = 0; i < reskeys.length; i++) {
-			let twg = result[reskeys[i]]
-			b.append(`<h1 id="comp${reskeys[i]}" class="comp-number">${reskeys[i]}</h1>`)
+		reskeys.forEach(key => {
+			let name = `Конкурс №${key}`
+			compsList.innerHTML += `<li><a class="mui-btn mui-btn--raised" href="#comp${key}" data-scroll>${name}</a></li>`
+
+			let comp = result[key]
+			b.append(`<h1 id="comp${key}" class="comp-number">${key}</h1>`)
 
 			let compEl = $('<div class="mui-panel comp-header"></div>').appendTo(b)
 
-			if (twg.themes) {
-				for (let i = 0; i < twg.themes.same.length; i++) {
-					compEl.append(`<h1>${$gen.fa('tag', '', '', !1)} ${twg.themes.same[i]}</h1>`)
-					if (twg.themes.descriptions) compEl.append(twg.themes.descriptions[i] ? `<p class="p-text">${twg.themes.descriptions[i].replace(/\n/g, '<br>')}</p>` : '<p class="p-text"></p>')
+			if (comp.themes) {
+				for (let i = 0; i < comp.themes.same.length; i++) {
+					compEl.append(`<h1>${$gen.fa('tag', '', '', !1)} ${comp.themes.same[i]}</h1>`)
+					if (comp.themes.descriptions) compEl.append(comp.themes.descriptions[i] ? `<p class="p-text">${comp.themes.descriptions[i].replace(/\n/g, '<br>')}</p>` : '<p class="p-text"></p>')
 				}
-			} else compEl.append(`<h1>${$gen.fa('tag', '', '', !1)} ${twg.theme}</h1>`)
+			} else compEl.append(`<h1>${$gen.fa('tag', '', '', !1)} ${comp.theme}</h1>`)
 
-			if (twg.description) compEl.append(twg.description.replace(/\n/g, '<br>') + '<br>')
+			if (comp.description) compEl.append(comp.description.replace(/\n/g, '<br>') + '<br>')
 
-			if (twg.achievements) {
+			if (comp.achievements) {
 				let
 					achievements = $('<details><summary class="mui-btn mui-btn--raised">Ачивки</summary></details>').appendTo(compEl),
 					achievementsBody = $('<div class="mui--z1 game-achievements"></div>').appendTo(achievements),
 					achievementBody = ''
 
-				for (let i = 0; i < twg.achievements.same.length; i++) {
+				for (let i = 0; i < comp.achievements.same.length; i++) {
 					let achievementBody = $('<div class="ach-description"></div>').appendTo(achievementsBody)
-					achievementBody.append(`<h4>${$gen.fa('star', '', '', !1)} ${twg.achievements.same[i]}</h4>`)
-					if (twg.achievements.descriptions) achievementBody.append(twg.achievements.descriptions[i] ? `<p class="p-text">${twg.achievements.descriptions[i]}</p>` : '<p class="p-text"></p>')
-					if (twg.achievements.gifts) achievementBody.append(twg.achievements.gifts[i] ? `<p class="ach-gift">${twg.achievements.gifts[i]}</p>` : '<p class="ach-gift"></p>')
-					if (twg.achievements.win) achievementBody.append(twg.achievements.win[i] ? `<p class="ach-win">${twg.achievements.win[i]}</p>` : '<p class="ach-win"></p>')
+					achievementBody.append(`<h4>${$gen.fa('star', '', '', !1)} ${comp.achievements.same[i]}</h4>`)
+					if (comp.achievements.descriptions) achievementBody.append(comp.achievements.descriptions[i] ? `<p class="p-text">${comp.achievements.descriptions[i]}</p>` : '<p class="p-text"></p>')
+					if (comp.achievements.gifts) achievementBody.append(comp.achievements.gifts[i] ? `<p class="ach-gift">${comp.achievements.gifts[i]}</p>` : '<p class="ach-gift"></p>')
+					if (comp.achievements.win) achievementBody.append(comp.achievements.win[i] ? `<p class="ach-win">${comp.achievements.win[i]}</p>` : '<p class="ach-win"></p>')
 				}
 			}
 
-			if (twg.note) compEl.append(`<pre class="p-note">${twg.note}</pre>`)
+			if (comp.note) compEl.append(`<pre class="p-note">${comp.note}</pre>`)
 
-			compEl.append(`<br><pre class="comp-date-start">${new moment(twg.start, 'X').format('LLL')}</pre><pre class="comp-date-end">${new moment(twg.end, 'X').format('LLL')}</pre>`)
+			compEl.append(`<br><pre class="comp-date-start">${new moment(comp.start, 'X').format('LLL')}</pre><pre class="comp-date-end">${new moment(comp.end, 'X').format('LLL')}</pre>`)
 
-			$gen.postLinks(compEl, twg.archive)
+			$gen.postLinks(compEl, comp.archive)
 
 			b.append('<div class="mui--z1 comp-games"></div>')
 
-			for (let i = 0; i < twg.games.length; i++) {
-				let game = twg.games[i]
+			for (let i = 0; i < comp.games.length; i++) {
+				let game = comp.games[i]
 
-				if (game.status === 'disqualified' && i + 2 < twg.games.length) {
-					twg.games.push(game)
+				if (game.status === 'disqualified' && i + 2 < comp.games.length) {
+					comp.games.push(game)
 					continue
 				}
 
@@ -162,7 +158,7 @@ function getComps(comp) {
 						break
 					default:
 						gameImage.setAttribute('src', imgCDN + game.image)
-						gameImage.addEventListener('click', function() { window.open(this.src) })
+						gameImage.onclick = function() { window.open(this.src) }
 						gameEl.append(gameImage)
 				}
 
@@ -257,7 +253,7 @@ function getComps(comp) {
 					}
 				}
 			}
-		}
+		})
 	}).catch((e) => {
 		let loadingElem = document.querySelector('.loading')
 
