@@ -45,7 +45,7 @@ var $gen = {
 }
 
 var $check = {
-	get: function(value) {
+	get: (value) => {
 		let params = new URLSearchParams(location.search)
 		return (params.get(value) == '') ? '' : params.get(value)
 	}
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 function getComp(comp) {
-	if (location.hash != '') history.pushState('', document.title, window.location.pathname)
+	history.pushState('', document.title, window.location.pathname)
 
 	let
 		compsList = document.querySelector('.comps-list'),
