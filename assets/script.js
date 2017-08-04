@@ -13,7 +13,7 @@ var $gen = {
 			cls = !c ? '' : ' ' + c,
 			check2x = (!d && d !== !1) ? ' fa-2x' : ''
 
-		return `<i class="fa fa-${type}${check2x}${cls}" aria-hidden="true">${content}</i>`
+		return `<i class="fa fa-${type}${check2x}${cls}">${content}</i>`
 	},
 	dlLink: (a, b, c) => {
 		let
@@ -44,33 +44,35 @@ var $gen = {
 	}
 }
 
+var $check = {
+	get: function(value) {
+		let params = new URLSearchParams(location.search)
+		return (params.get(value) == '') ? '' : params.get(value)
+	}
+}
+
 const
-	infoCDN = 'https://raw.githubusercontent.com/twoweeks/db/cfde47f907fd9b923e62e16d4c88acd3e0d01620/',
-	//infoCDN = 'https://raw.githubusercontent.com/twoweeks/db/master/',
+	infoCDN = 'https://raw.githubusercontent.com/twoweeks/db/master/json/min/',
 	imgCDN = 'https://113217.selcdn.ru/gd/'
 
 document.addEventListener('DOMContentLoaded', () => {
 	let compBtn = document.querySelectorAll('.getCompBtn')
-
-	for (let i = 0; i < compBtn.length; i++) {
-		compBtn[i].setAttribute('href', 'javascript:void(0)')
-		compBtn[i].onclick = function(e) {
+	Array.from(compBtn).forEach(btn => {
+		btn.setAttribute('href', 'javascript:void(0)')
+		btn.onclick = (e => {
 			e.preventDefault()
-			getComps(this.dataset.comp)
-		}
-	}
-
-	getComps('twg')
-
-	smoothScroll.init({
-		selector: '[data-scroll]',
-		easing: 'easeInOutCubic',
-		speed: 1000, offset: 0
+			getComp(e.target.dataset.comp)
+		})
 	})
+
+	let compFromURL = $check.get('get')
+	if (compFromURL && compFromURL != '')
+		getComp(compFromURL)
+		else getComp('twg')
 })
 
-function getComps(comp) {
-	history.pushState('', document.title, window.location.pathname)
+function getComp(comp) {
+	if (location.hash != '') history.pushState('', document.title, window.location.pathname)
 
 	let
 		compsList = document.querySelector('.comps-list'),
@@ -79,26 +81,12 @@ function getComps(comp) {
 	compsList.textContent = ''
 	compsContainer.textContent = ''
 
-	fetch(infoCDN + comp + '.json').then(response => response.json()).then(result => {
-		let reskeys = Object.keys(result)
-
-		for (let i = 0; i < reskeys.length; i++) {
-			let res = Object.create(result[reskeys[i]])
-
-			if (res.coalition) {
-				reskeys[i] += '-1'
-				reskeys.splice(i + 1, 0, i + 1 + '-2')
-				result[reskeys[i + 1]] = res.glowstick
-				result[reskeys[i]] = res.coalition
-				result[reskeys[i]].note = res.note
-			}
-		}
-
+	fetch(`${infoCDN}${comp}.json`).then(response => response.json()).then(result => {
 		let b = $('.comps-container') // @TODO vanilla here, pls
 
-		reskeys.forEach(key => {
+		Object.keys(result).forEach(key => {
 			let name = `Конкурс №${key}`
-			compsList.innerHTML += `<li><a class="mui-btn mui-btn--raised" href="#comp${key}" data-scroll>${name}</a></li>`
+			compsList.innerHTML += `<li><a class="mui-btn mui-btn--raised" href="#comp${key}">${name}</a></li>`
 
 			let comp = result[key]
 			b.append(`<h1 id="comp${key}" class="comp-number">${key}</h1>`)
@@ -106,10 +94,10 @@ function getComps(comp) {
 			let compEl = $('<div class="mui-panel comp-header"></div>').appendTo(b)
 
 			if (comp.themes) {
-				for (let i = 0; i < comp.themes.same.length; i++) {
-					compEl.append(`<h1>${$gen.fa('tag', '', '', !1)} ${comp.themes.same[i]}</h1>`)
-					if (comp.themes.descriptions) compEl.append(comp.themes.descriptions[i] ? `<p class="p-text">${comp.themes.descriptions[i].replace(/\n/g, '<br>')}</p>` : '<p class="p-text"></p>')
-				}
+				comp.themes.forEach(theme => {
+					compEl.append(`<h1>${$gen.fa('tag', '', '', !1)} ${theme.name}</h1>`)
+					if (theme.description) compEl.append(`<p class="p-text">${theme.description ? theme.description : ''}</p>`)
+				})
 			} else compEl.append(`<h1>${$gen.fa('tag', '', '', !1)} ${comp.theme}</h1>`)
 
 			if (comp.description) compEl.append(comp.description.replace(/\n/g, '<br>') + '<br>')
@@ -120,13 +108,14 @@ function getComps(comp) {
 					achievementsBody = $('<div class="mui--z1 game-achievements"></div>').appendTo(achievements),
 					achievementBody = ''
 
-				for (let i = 0; i < comp.achievements.same.length; i++) {
+				comp.achievements.forEach(achievement => {
 					let achievementBody = $('<div class="ach-description"></div>').appendTo(achievementsBody)
-					achievementBody.append(`<h4>${$gen.fa('star', '', '', !1)} ${comp.achievements.same[i]}</h4>`)
-					if (comp.achievements.descriptions) achievementBody.append(comp.achievements.descriptions[i] ? `<p class="p-text">${comp.achievements.descriptions[i]}</p>` : '<p class="p-text"></p>')
-					if (comp.achievements.gifts) achievementBody.append(comp.achievements.gifts[i] ? `<p class="ach-gift">${comp.achievements.gifts[i]}</p>` : '<p class="ach-gift"></p>')
-					if (comp.achievements.win) achievementBody.append(comp.achievements.win[i] ? `<p class="ach-win">${comp.achievements.win[i]}</p>` : '<p class="ach-win"></p>')
-				}
+					achievementBody.append(`<h4>${$gen.fa('star', '', '', !1)} ${achievement.name}</h4>`)
+
+					if (achievement.description) achievementBody.append(`<p class="p-text">${achievement.description ? achievement.description : ''}</p>`)
+					if (achievement.gift) achievementBody.append(`<p class="p-text ach-gift">${achievement.gift ? achievement.gift : ''}</p>`)
+					if (achievement.win) achievementBody.append(`<p class="p-text ach-win">${achievement.win ? achievement.win : ''}</p>`)
+				})
 			}
 
 			if (comp.note) compEl.append(`<pre class="p-note">${comp.note}</pre>`)
@@ -135,14 +124,11 @@ function getComps(comp) {
 
 			$gen.postLinks(compEl, comp.archive)
 
-			b.append('<div class="mui--z1 comp-games"></div>')
+			if (comp.games && comp.games.length != 0) b.append('<div class="mui--z1 comp-games"></div>')
 
-			for (let i = 0; i < comp.games.length; i++) {
-				let game = comp.games[i]
-
-				if (game.status === 'disqualified' && i + 2 < comp.games.length) {
-					comp.games.push(game)
-					continue
+			comp.games.forEach((game, i) => {
+				if (game.status == 'disqualified' && i + 2 < comp.games.length) {
+					comp.games.push(game); return
 				}
 
 				let
@@ -154,8 +140,7 @@ function getComps(comp) {
 				switch (game.image) {
 					case '':
 					case undefined:
-						gameBodyEl.addClass('game-body-full')
-						break
+						gameBodyEl.addClass('game-body-full'); break
 					default:
 						gameImage.setAttribute('src', imgCDN + game.image)
 						gameImage.onclick = function() { window.open(this.src) }
@@ -166,26 +151,21 @@ function getComps(comp) {
 
 				switch (game.status) {
 					case 'disqualified':
-						gameStatus = 'Дисквалификация'
-						break
+						gameStatus = 'Дисквалификация'; break
 					case 'win':
 					case '1':
 						gameStatus = 'Победитель'
 						break
 					case '2': case '3': case '4': // ???
-						gameStatus = `${game.status} место`
-						break
+						gameStatus = `${game.status} место`; break
 					case 'final':
-						gameStatus = 'Финалист'
-						break
+						gameStatus = 'Финалист'; break
 					case 'demo':
-						gameStatus = 'Демо-версия'
-						break
+						gameStatus = 'Демо-версия'; break
 					case 'updated':
-						gameStatus = 'Обновлённая версия'
-						break
+						gameStatus = 'Обновлённая версия'; break
 					default:
-						console.info('Неправильный статус ' + game.status + ' у ' + game.name)
+						console.info(`Неправильный статус ${game.status} у ${game.name}`)
 				}
 
 				if (game.status !== 'disqualified')
@@ -196,7 +176,7 @@ function getComps(comp) {
 
 				if (game.genre) gameBodyEl.append(`<pre class="game-genre">${game.genre}</pre>`)
 
-				gameBodyEl.append(game.description ? `<p class="p-text">${game.description.replace(/\n/g, '<br>')}</p>` : '<p class="p-text"></p>')
+				gameBodyEl.append(`<p class="p-text">${game.description ? game.description.replace(/\n/g, '<br>') : ''}</p>`)
 
 				if (game.tools) gameBodyEl.append(`<pre class="game-tools">${game.tools}</pre>`)
 
@@ -252,9 +232,9 @@ function getComps(comp) {
 						$gen.postLinks(downloads, game.other_links.demo, $gen.fa('bug') + '<br>')
 					}
 				}
-			}
+			})
 		})
-	}).catch((e) => {
+	}).catch(e => {
 		let loadingElem = document.querySelector('.loading')
 
 		if (!loadingElem) {
