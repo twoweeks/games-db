@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 function getComp(comp) {
-	history.pushState('', document.title, window.location.pathname)
+	history.pushState('', document.title, `${window.location.pathname}?get=${comp}`)
 
 	let
 		compsList = document.querySelector('.comps-list'),
