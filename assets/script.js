@@ -52,8 +52,8 @@ var $check = {
 }
 
 const
-	infoCDN = 'https://raw.githubusercontent.com/twoweeks/db/master/json/min/',
-	imgCDN = 'https://113217.selcdn.ru/gd/'
+	infoCDN = 'https://raw.githubusercontent.com/twoweeks/db/ed069a3ec300ac07179fd3ecc7406b4f60c93b74/json/min/',
+	imgCDN = 'https://gd-imgs.cojam.ru/'
 
 document.addEventListener('DOMContentLoaded', () => {
 	let compBtn = document.querySelectorAll('.getCompBtn')
