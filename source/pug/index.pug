@@ -1,0 +1,24 @@
+doctype html
+html(lang='ru')
+	head
+		title Игры с конкурсов /gd/
+		meta(charset='utf-8')
+
+		link(rel='shortcut icon' href='favicon.ico')
+
+		meta(name='viewport' content='width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no')
+
+		each URL in ['raw.githubusercontent.com', 'gd-imgs.cojam.ru', 'fonts.gstatic.com']
+			link(rel='dns-prefetch' href=`//${URL}`)
+
+		link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto')
+
+		link(rel='stylesheet' href=`${PATHS.css}/style.min.css?v=${VERSION}`)
+	body
+		div.names
+		div.comps
+		div.games
+
+		include inc/vendor-js.pug
+
+		script(src=`${PATHS.js}/script.min.js?v=${VERSION}` data-version=`${VERSION}` defer)

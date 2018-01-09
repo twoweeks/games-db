@@ -1,0 +1,4 @@
+- var version = { moment: '2.20.1' }
+
+each lib in [{ name: 'kamina-js', path: 'dist/kamina.min', v: '1.2.3' }, { name: 'moment', path: 'moment.min', v: version.moment }, { name: 'moment', path: 'locale/ru', v: version.moment }]
+	script(src=`https://cdn.jsdelivr.net/npm/${lib.name}@${lib.v}/${lib.path}.js` defer)
