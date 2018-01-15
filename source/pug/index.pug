@@ -11,13 +11,14 @@ html(lang='ru')
 		each URL in ['raw.githubusercontent.com', 'gd-imgs.cojam.ru', 'fonts.gstatic.com']
 			link(rel='dns-prefetch' href=`//${URL}`)
 
-		link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto')
+		each font in ['Roboto', 'Material+Icons']
+			link(rel='stylesheet' href=`https://fonts.googleapis.com/css?family=${font}`)
 
 		link(rel='stylesheet' href=`${PATHS.css}/style.min.css?v=${VERSION}`)
 	body
 		div.names
+		div.comps-list
 		div.comps
-		div.games
 
 		include inc/vendor-js.pug
 

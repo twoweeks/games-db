@@ -76,8 +76,8 @@ gulp.task('minify-js', () => tube([
 	watch(paths.js.dev, { ignoreInitial: false }),
 	plumber(),
 	minifyJS({}),
-	rename({suffix: '.min'}),
 	bom(),
+	rename({suffix: '.min'}),
 	gulp.dest(paths.js.prod),
 	reloadServer()
 ]))
@@ -87,8 +87,8 @@ let scssTubes = [
 	sass.vars({ $VERSION: project.version }),
 	sass.compile({outputStyle: 'compressed'}),
 	csso(),
-	rename({suffix: '.min'}),
 	bom(),
+	rename({suffix: '.min'}),
 	gulp.dest(paths.css.prod)
 ]
 
@@ -100,5 +100,5 @@ gulp.task('scss:dev', () => tube(
 	[sass.watch(paths.css.dev)].concat(scssTubes, [reloadServer()])
 ))
 
-gulp.task('default', gulp.parallel('pug', 'minify-js', 'scss:dev'))
-gulp.task('dev', gulp.parallel('liveReload', 'default'))
+gulp.task('default', ['pug', 'minify-js', 'scss:dev'])
+gulp.task('dev', ['liveReload', 'default'])
