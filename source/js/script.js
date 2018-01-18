@@ -32,6 +32,36 @@ let parseLocalComps = comps => {
 	namesContainer.appendChild(namesList)
 }
 
+let parseGame = data => {
+	let gameBox = $create.elem('div', '', 'comp_games--game _game')
+
+	if (!data) { return }
+
+	let game = data.game, CDN = data.CDN
+
+	if (game.image && game.image != '') {
+		let
+			gameImageBox =       $create.elem('div', '', '_game__image'),
+			gameImageBoxСrutch = $create.elem('picture'),
+			gameImage =          $create.elem('img')
+
+		gameImage.dataset.src = `${CDN.imgs}/${game.image}`
+		//gameImage.setAttribute('src', `${CDN.imgs}/${game.image}`)
+
+		//gameImageBoxСrutch.appendChild(gameImage)
+		gameImageBox.appendChild(gameImage)
+		gameBox.appendChild(gameImageBox)
+	} else {
+		gameBox.classList.add('_game--no-image')
+	}
+
+	let gameInfoBox = $create.elem('div', '', '_game__info')
+
+	gameBox.appendChild(gameInfoBox)
+
+	return gameBox
+}
+
 $create.db = {
 	icon: icon => `<i class="material-icons">${icon}</i>`,
 	textBlocks: text => `<span>${text.replace(/\n/g, '</span><span>')}</span>`,
@@ -49,6 +79,8 @@ $create.db = {
 }
 
 let getCompData = file => {
+	if (!file) { file = 'twg' }
+
 	let CDN = {
 		data: 'https://raw.githubusercontent.com/twoweeks/db/master/json/min',
 		imgs: 'https://gd-imgs.cojam.ru'
@@ -68,8 +100,6 @@ let getCompData = file => {
 		let compsList = $create.elem('ul')
 
 		result.forEach(comp => {
-			console.log(comp)
-
 			let
 				compsListItem =        $create.elem('li'),
 				compsListItemButton =  $create.elem('button', `Конкурс №${comp.meta.num}`, 'btn btn__comp')
@@ -158,6 +188,17 @@ let getCompData = file => {
 
 			compBox.appendChild(compBoxHeader)
 
+			if (comp.games && comp.games.length != 0) {
+				comp.games.forEach((game, i) => {
+					if (game.status == 'disqualified' && i + 2 < comp.games.length) {
+						comp.games.push(game); return
+					}
+
+					let gameBox = parseGame({ game: game, CDN: CDN })
+					compBoxGames.appendChild(gameBox)
+				})
+			}
+
 			compBox.appendChild(compBoxGames)
 
 			gamesContainer.appendChild(compBox)
@@ -180,6 +221,8 @@ let getCompData = file => {
 		})
 
 		compsContainer.appendChild(compsList)
+
+		new LazyLoad({ elements_selector: '._game__image img' })
 	}).catch(e => { console.log(e) })
 }
 
@@ -192,10 +235,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		{ name: 'Two Days Game', file: 'two-dg' }
 	])
 
-	let compFromURL = $check.get('get')
-	getCompData(
-		compFromURL && compFromURL != ''
-		? compFromURL
-		: 'twg'
-	)
+	let compFromURL = $check.get('get') || 'twg'
+	getCompData(compFromURL)
 })
