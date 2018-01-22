@@ -12,7 +12,7 @@ html, body {
 
 body {
 	display: grid;
-	grid-template-columns: 225px 200px 1fr;
+	grid-template-columns: 225px 200px auto;
 
 	overflow-x: hidden;
 
@@ -37,6 +37,25 @@ ul {
 
 .material-icons {
 	font-size: 1em;
+
+	cursor: default;
+	user-select: none;
+}
+
+._middle {
+	& > * {
+		vertical-align: middle;
+	}
+
+	& > .material-icons {
+		&:after {
+			content: '\00A0';
+		}
+	}
+}
+
+._tb {
+	display: block;
 }
 
 .btn {
@@ -78,18 +97,16 @@ ul {
 .names, .comps-list {
 	padding: 10px 10px 10px 15px;
 
-	@each $browser in '', '-webkit-', '-moz-' {
-		&::#{$browser}scrollbar {
-			width: 5px;
-		}
+	&::-webkit-scrollbar {
+		width: 5px; height: 5px;
+	}
 
-		&::#{$browser}scrollbar-thumb {
-			background-color: #000;
-		}
+	&::-webkit-scrollbar-thumb {
+		background-color: #000;
+	}
 
-		&::#{$browser}scrollbar-track {
-			box-shadow: inset 0 0 5px rgba(0, 0, 0, .3);
-		}
+	&::-webkit-scrollbar-track {
+		box-shadow: inset 0 0 5px rgba(0, 0, 0, .3);
 	}
 }
 
@@ -111,15 +128,19 @@ ul {
 	line-height: 1.3em;
 	padding: 5px;
 
-	&:not(:first-child) {
-		padding-top: 15px;
-		margin-top: 15px;
-		border-top: 5px dashed #e6e6e6;
+	&:not([data-selected]) {
+		display: none;
 	}
+
+	// &:not(:first-child) {
+	// 	padding-top: 15px;
+	// 	margin-top: 15px;
+	// 	border-top: 5px dashed #e6e6e6;
+	// }
 
 	&__header, &__games {
 		background-color: #e6e6e6;
-    padding: 10px;
+		padding: 10px;
 	}
 
 	&__header {
@@ -164,17 +185,10 @@ ul {
 				p {
 					&:first-child {
 						font-weight: bold;
-
-						& > * {
-							vertical-align: middle;
-						}
 					}
 
-					&:nth-child(2) {
-						span {
-							display: block;
-							margin-top: 2.5px;
-						}
+					&:not(:first-child) {
+						font-size: .9em
 					}
 				}
 			}
@@ -221,6 +235,7 @@ ul {
 }
 
 ._game {
+	position: relative;
 	background-color: #fff;
 	padding: 10px;
 
@@ -236,6 +251,12 @@ ul {
 	}
 
 	$_imgWidth: 250px;
+
+	&--no-image {
+		& > *:first-child {
+			width: 100%;
+		}
+	}
 
 	&__image {
 		width: $_imgWidth;
@@ -253,6 +274,102 @@ ul {
 
 	&__info {
 		width: calc(100% - #{$_imgWidth});
+		padding: 10px;
 		font-size: 1rem;
+
+		&--description {
+			span {
+				&:not(:first-child) {
+					margin-top: 2.5px;
+				}
+			}
+		}
+
+		&--status {
+			position: absolute;
+			top: 10px; right: 10px;
+			font-size: 1.5em;
+		}
+	}
+}
+
+._status {
+	.material-icons {
+		@each $browser in '-webkit-', '-moz-', '' {
+			#{$browser}text-stroke: .5px #333;
+		}
+	}
+
+	&--win, &--1 {
+		color: #ffff33;
+	}
+
+	&--2 {
+		color: #ebebeb;
+	}
+
+	&--3 {
+		color: #cd7f32;
+	}
+
+	&--demo {
+		color: #fff;
+	}
+
+	&--disqualified {
+		color: #ff0000;
+	}
+}
+
+@media screen and (max-width: 899px) {
+	body {
+		grid-template: auto auto auto / auto;
+	}
+
+	.btn {
+		padding: 5px 10px;
+
+		&__name {
+			&--alt-names-list {
+				display: none;
+			}
+		}
+
+		&__comp {
+			& > * {
+				display: inline-block;
+				vertical-align: middle;
+			}
+
+			&--edition {
+				margin-left: 5px;
+
+				&:before { content: '(' }
+				&:after { content: ')' }
+			}
+		}
+	}
+
+	$_blocksHeight: 70px;
+
+	.names, .comps-list {
+		overflow-y: hidden;
+		overflow-x: auto;
+
+		padding: 10px;
+
+		& > ul {
+			width: -moz-max-content;
+			width: max-content;
+
+			& > li {
+				display: inline-block;
+				margin: 0;
+
+				&:not(:first-child):not(:last-child) {
+					margin: 0 5px;
+				}
+			}
+		}
 	}
 }

@@ -45,8 +45,8 @@ let parseGame = data => {
 			gameImageBoxСrutch = $create.elem('picture'),
 			gameImage =          $create.elem('img')
 
-		gameImage.dataset.src = `${CDN.imgs}/${game.image}`
-		//gameImage.setAttribute('src', `${CDN.imgs}/${game.image}`)
+		//gameImage.dataset.src = `${CDN.imgs}/${game.image}`
+		gameImage.setAttribute('src', `${CDN.imgs}/${game.image}`)
 
 		//gameImageBoxСrutch.appendChild(gameImage)
 		gameImageBox.appendChild(gameImage)
@@ -57,6 +57,57 @@ let parseGame = data => {
 
 	let gameInfoBox = $create.elem('div', '', '_game__info')
 
+	let gameInfoName = $create.elem('h2', $create.db.icon('videogame_asset'), '_game__info--name _middle')
+
+	gameInfoName.appendChild($create.elem('span', (game.name && game.name != '') ? game.name : 'Названия нет'))
+
+	gameInfoBox.appendChild(gameInfoName)
+
+	if (game.genre && game.genre != '') {
+		gameInfoBox.appendChild($create.elem('p', `Жанр: ${game.genre}`))
+	}
+
+	gameInfoBox.appendChild($create.elem('div', game.description ? $create.db.textBlocks(game.description) : 'Описания нет.', '_game__info--description'))
+
+	if (game.tools && game.tools != '') {
+		gameInfoBox.appendChild($create.elem('p', `Инструменты: ${game.tools}`))
+	}
+
+	if (game.dependencies && game.dependencies != '') {
+		gameInfoBox.appendChild($create.elem('p', `Зависимости: ${game.dependencies}`))
+	}
+
+	if (game.note && game.note != '') {
+		gameInfoBox.appendChild($create.elem('p', `Примечание: ${game.note}`))
+	}
+
+	let gameInfoStatusName = ''
+
+	switch (game.status) {
+		case 'win': case '1':
+			gameInfoStatusName = 'Победитель'; break
+		case '2': case '3':
+		case '4': // ???
+			gameInfoStatusName = `${game.status} место`; break
+		case 'final':
+			gameInfoStatusName = 'Финалист'; break
+		case 'demo':
+			gameInfoStatusName = 'Демоверсия'; break
+		case 'updated':
+			gameInfoStatusName = 'Обновлённая версия'; break
+		case 'disqualified':
+			gameInfoStatusName = 'Дисквалификация'; break
+		default:
+			console.info(`Неизвестный статус ${game.status} у ${game.name}`)
+	}
+
+	/* @TODO дождаться, когда в пак иконок введут кубок, и заменить им звёздочку */
+
+	let gameInfoStatus = $create.elem('div', $create.db.icon((game.status != 'disqualified') ? 'star' : 'close'), `_game__info--status _status _status--${(game.status && game.status != '') ? game.status : 'empty'}`)
+	gameInfoStatus.firstChild.setAttribute('title', gameInfoStatusName)
+
+	gameInfoBox.appendChild(gameInfoStatus)
+
 	gameBox.appendChild(gameInfoBox)
 
 	return gameBox
@@ -64,7 +115,7 @@ let parseGame = data => {
 
 $create.db = {
 	icon: icon => `<i class="material-icons">${icon}</i>`,
-	textBlocks: text => `<span>${text.replace(/\n/g, '</span><span>')}</span>`,
+	textBlocks: text => `<span class="_tb">${text.replace(/\n/g, '</span><span class="_tb">')}</span>`,
 	time: timestamp => {
 		let formatter = new Intl.DateTimeFormat('ru', {
 			year: 'numeric',
@@ -87,22 +138,51 @@ let getCompData = file => {
 	}
 
 	let
-		compsContainer = $make.qs('.comps-list'),
-		gamesContainer = $make.qs('.comps')
+		compsListContainer = $make.qs('.comps-list'),
+		compsContainer = $make.qs('.comps')
+
+	let selectComp = comp => {
+		let elems = [
+			...$make.qsf('button.btn__comp', compsListContainer, ['a']),
+			...$make.qsf('.comp', compsContainer, ['a'])
+		]
+
+		elems.forEach(elem => {
+			let elemData = elem.dataset
+
+			if ('selected' in elemData) {
+				delete elemData.selected
+			}
+
+			/* @TODO fix this pls */
+
+			if ('edition' in comp) {
+				if (elemData.num == comp.num && elemData.edition == comp.edition) {
+					elemData.selected = ''
+				}
+			} else {
+				if (elemData.num == comp.num) {
+					elemData.selected = ''
+				}
+			}
+		})
+	}
 
 	fetch(`${CDN.data}/${file}.json`).then(response => {
 		if (response.ok) {
+			compsListContainer.textContent = ''
 			compsContainer.textContent = ''
-			gamesContainer.textContent = ''
 			return response.json()
 		} else { throw 42 }
 	}).then(result => {
 		let compsList = $create.elem('ul')
 
-		result.forEach(comp => {
+		result.forEach((comp, i) => {
 			let
 				compsListItem =        $create.elem('li'),
-				compsListItemButton =  $create.elem('button', `Конкурс №${comp.meta.num}`, 'btn btn__comp')
+				compsListItemButton =  $create.elem('button', '', 'btn btn__comp')
+
+			compsListItemButton.appendChild($create.elem('span', `Конкурс №${comp.meta.num}`))
 
 			let isCompHaveEdition = (comp.meta.edition && comp.meta.edition != '') ? true : false
 
@@ -112,6 +192,7 @@ let getCompData = file => {
 			let compBox = $create.elem('div', '', 'comp')
 
 			compBox.dataset.num = comp.meta.num
+			compsListItemButton.dataset.num = comp.meta.num
 
 			let
 				compBoxHeader =  $create.elem('div', '', 'comp__header'),
@@ -138,8 +219,11 @@ let getCompData = file => {
 				comp.themes.forEach(theme => {
 					let themesListItem = $create.elem('li')
 
-					themesListItem.appendChild($create.elem('p', `${$create.db.icon('label')} <span>${theme.name}</span>`))
-					if (theme.description) { themesListItem.appendChild($create.elem('p', $create.db.textBlocks(theme.description))) }
+					themesListItem.appendChild($create.elem('p', `${$create.db.icon('label')}<span>${theme.name}</span>`, '_middle'))
+
+					if (theme.description) {
+						themesListItem.appendChild($create.elem('p', $create.db.textBlocks(theme.description)))
+					}
 
 					compBoxHeaderThemes.appendChild(themesListItem)
 				})
@@ -155,14 +239,27 @@ let getCompData = file => {
 
 			if (comp.achievements && comp.achievements != '') {
 				let
-					compBoxAhievements = $create.elem('details', '<summary class="btn btn--nfw"></summary>', 'comp__header--ach'),
+					compBoxAhievements = $create.elem('details', '', 'comp__header--ach'),
 					compBoxAchList = $create.elem('ul')
+
+				compBoxAhievements.appendChild($create.elem('summary', '', 'btn btn--nfw'))
 
 				comp.achievements.forEach(ach => {
 					let achListItem = $create.elem('li')
 
-					achListItem.appendChild($create.elem('p', `${$create.db.icon('star')} <span>${ach.name}</span>`))
-					if (ach.description) { achListItem.appendChild($create.elem('p', $create.db.textBlocks(ach.description))) }
+					achListItem.appendChild($create.elem('p', `${$create.db.icon('place')}<span>${ach.name}</span>`, 'comp__header--ach _middle'))
+
+					if (ach.description && ach.description != '') {
+						achListItem.appendChild($create.elem('p', $create.db.textBlocks(`<b>Описание</b>: ${ach.description}`), 'comp__header--ach'))
+					}
+
+					if (ach.gift && ach.gift != '') {
+						achListItem.appendChild($create.elem('p', $create.db.textBlocks(`<b>Приз</b>: ${ach.description}`)))
+					}
+
+					if (ach.win && ach.win != '') {
+						achListItem.appendChild($create.elem('p', $create.db.textBlocks(`<b>Победитель</b>: ${ach.description}`)))
+					}
 
 					compBoxAchList.appendChild(achListItem)
 				})
@@ -190,10 +287,13 @@ let getCompData = file => {
 
 			if (comp.games && comp.games.length != 0) {
 				comp.games.forEach((game, i) => {
-					if (game.status == 'disqualified' && i + 2 < comp.games.length) {
-						comp.games.push(game); return
+					if (game.status == 'disqualified') {
+						delete comp.games[i]
+						comp.games.push(game)
 					}
+				})
 
+				comp.games.forEach(game => {
 					let gameBox = parseGame({ game: game, CDN: CDN })
 					compBoxGames.appendChild(gameBox)
 				})
@@ -201,28 +301,33 @@ let getCompData = file => {
 
 			compBox.appendChild(compBoxGames)
 
-			gamesContainer.appendChild(compBox)
+			compsContainer.appendChild(compBox)
+
+			let compData = { num: comp.meta.num }
 
 			if (isCompHaveEdition) {
+				compsListItemButton.dataset.edition = comp.meta.edition
 				compBox.dataset.edition = comp.meta.edition
+
+				compData.edition = comp.meta.edition
 
 				let compsListItemEdtitonElem = $create.elem('p', `${comp.meta.edition} Edition`, 'btn__comp--edition')
 
 				compsListItemButton.appendChild(compsListItemEdtitonElem)
 			}
 
+			if (i == 0) {
+				sessionStorage.setItem('db_firstCompInFile', JSON.stringify(compData))
+			}
+
 			compsListItemButton.addEventListener('click', e => {
-				$make.qs(`.comps .comp[data-num='${comp.meta.num}']${isCompHaveEdition ? '[data-edition=' + comp.meta.edition + ']' : ''}`).scrollIntoView({
-					behavior: 'smooth',
-					block: 'start',
-					inline: 'start'
-				})
+				selectComp(compData)
 			})
 		})
 
-		compsContainer.appendChild(compsList)
+		compsListContainer.appendChild(compsList)
 
-		new LazyLoad({ elements_selector: '._game__image img' })
+		selectComp(JSON.parse(sessionStorage.getItem('db_firstCompInFile')))
 	}).catch(e => { console.log(e) })
 }
 
