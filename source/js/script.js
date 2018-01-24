@@ -1,5 +1,21 @@
 'use strict'
 
+$create.db = {
+	icon: icon => `<i class="material-icons">${icon}</i>`,
+	textBlocks: text => `<span class="_tb">${text.replace(/\n/g, '</span><span class="_tb">')}</span>`,
+	time: timestamp => {
+		let formatter = new Intl.DateTimeFormat('ru', {
+			year: 'numeric',
+			month: 'long',
+			day: 'numeric',
+			hour: 'numeric',
+			minute: 'numeric'
+		})
+
+		return formatter.format(new Date(timestamp * 1000))
+	}
+}
+
 let parseLocalComps = comps => {
 	let
 		namesContainer = $make.qs('.names'),
@@ -32,23 +48,55 @@ let parseLocalComps = comps => {
 	namesContainer.appendChild(namesList)
 }
 
-let parseGame = data => {
+let parseGame = gameObject => {
+	if (!gameObject) { return }
+
+	let game = gameObject
+
 	let gameBox = $create.elem('div', '', 'comp_games--game _game')
 
-	if (!data) { return }
+	let parseGameLinks = linksObject => {
+		let linksElem = $create.elem('div', '', '_game__info--download')
 
-	let game = data.game, CDN = data.CDN
+		Object.keys(linksObject).forEach(key => {
+			switch (key) {
+				case 'site':
+					break;
+				case 'store':
+					break;
+				case 'updated':
+					break;
+				case 'final':
+					break;
+				case 'dlc':
+					break;
+				case 'demo_updated':
+					break;
+				case 'demo':
+					break;
+				case 'source':
+					break;
+				default:
+					console.warn(`Некорректная ссылка "${key}" у игры "${game.name}"`)
+			}
+		})
+
+		return linksElem
+	}
 
 	if (game.image && game.image != '') {
 		let
-			gameImageBox =       $create.elem('div', '', '_game__image'),
-			gameImageBoxСrutch = $create.elem('picture'),
+			gameImageBox =       $create.elem('picture', '', '_game__image'),
 			gameImage =          $create.elem('img')
 
-		//gameImage.dataset.src = `${CDN.imgs}/${game.image}`
-		gameImage.setAttribute('src', `${CDN.imgs}/${game.image}`)
+		gameImage.dataset.src = game.image
 
-		//gameImageBoxСrutch.appendChild(gameImage)
+		gameImage.addEventListener('error', e => {
+			gameBox.classList.add('_game--no-image')
+			gameImageBox.remove()
+			console.warn(`Ошибка загрузки картинки у игры "${game.name}".`)
+		})
+
 		gameImageBox.appendChild(gameImage)
 		gameBox.appendChild(gameImageBox)
 	} else {
@@ -98,7 +146,7 @@ let parseGame = data => {
 		case 'disqualified':
 			gameInfoStatusName = 'Дисквалификация'; break
 		default:
-			console.info(`Неизвестный статус ${game.status} у ${game.name}`)
+			console.warn(`Неизвестный статус ${game.status} у ${game.name}`)
 	}
 
 	/* @TODO дождаться, когда в пак иконок введут кубок, и заменить им звёздочку */
@@ -108,25 +156,14 @@ let parseGame = data => {
 
 	gameInfoBox.appendChild(gameInfoStatus)
 
+	if (game.links && Object.keys(game.links) != 0) {
+		let gameInfoDownload = parseGameLinks(game.links)
+		gameInfoBox.appendChild(gameInfoDownload)
+	}
+
 	gameBox.appendChild(gameInfoBox)
 
 	return gameBox
-}
-
-$create.db = {
-	icon: icon => `<i class="material-icons">${icon}</i>`,
-	textBlocks: text => `<span class="_tb">${text.replace(/\n/g, '</span><span class="_tb">')}</span>`,
-	time: timestamp => {
-		let formatter = new Intl.DateTimeFormat('ru', {
-			year: 'numeric',
-			month: 'long',
-			day: 'numeric',
-			hour: 'numeric',
-			minute: 'numeric'
-		})
-
-		return formatter.format(new Date(timestamp * 1000))
-	}
 }
 
 let getCompData = file => {
@@ -134,7 +171,7 @@ let getCompData = file => {
 
 	let CDN = {
 		data: 'https://raw.githubusercontent.com/twoweeks/db/master/json/min',
-		imgs: 'https://gd-imgs.cojam.ru'
+		imgs: 'https://gd-cdn.blyat.science'
 	}
 
 	let
@@ -143,7 +180,7 @@ let getCompData = file => {
 
 	let selectComp = comp => {
 		let elems = [
-			...$make.qsf('button.btn__comp', compsListContainer, ['a']),
+			...$make.qsf('.btn__comp', compsListContainer, ['a']),
 			...$make.qsf('.comp', compsContainer, ['a'])
 		]
 
@@ -154,15 +191,20 @@ let getCompData = file => {
 				delete elemData.selected
 			}
 
-			/* @TODO fix this pls */
+			if (elemData.num == comp.num && elemData.edition == comp.edition) {
+				elemData.selected = ''
 
-			if ('edition' in comp) {
-				if (elemData.num == comp.num && elemData.edition == comp.edition) {
-					elemData.selected = ''
-				}
-			} else {
-				if (elemData.num == comp.num) {
-					elemData.selected = ''
+				if (elem.classList.contains('comp')) {
+					let compImages = $make.qsf('._game__image > img', elem, ['a'])
+
+					compImages.forEach(image => {
+						let imageData = image.dataset
+
+						if (imageData.src && imageData.src != '') {
+							image.setAttribute('src', `${CDN.imgs}/${imageData.src}`)
+							delete imageData.src
+						}
+					})
 				}
 			}
 		})
@@ -294,7 +336,7 @@ let getCompData = file => {
 				})
 
 				comp.games.forEach(game => {
-					let gameBox = parseGame({ game: game, CDN: CDN })
+					let gameBox = parseGame(game)
 					compBoxGames.appendChild(gameBox)
 				})
 			}
@@ -314,6 +356,11 @@ let getCompData = file => {
 				let compsListItemEdtitonElem = $create.elem('p', `${comp.meta.edition} Edition`, 'btn__comp--edition')
 
 				compsListItemButton.appendChild(compsListItemEdtitonElem)
+			} else {
+				compsListItemButton.dataset.edition = '_none'
+				compBox.dataset.edition = '_none'
+
+				compData.edition = '_none'
 			}
 
 			if (i == 0) {
@@ -328,7 +375,7 @@ let getCompData = file => {
 		compsListContainer.appendChild(compsList)
 
 		selectComp(JSON.parse(sessionStorage.getItem('db_firstCompInFile')))
-	}).catch(e => { console.log(e) })
+	}).catch(e => { console.warn(e) })
 }
 
 document.addEventListener('DOMContentLoaded', () => {
