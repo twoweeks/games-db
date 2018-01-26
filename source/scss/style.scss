@@ -37,8 +37,6 @@ ul {
 
 .material-icons {
 	font-size: 1em;
-
-	cursor: default;
 	user-select: none;
 }
 
@@ -62,18 +60,29 @@ ul {
 	--sub-font-size: .7em;
 
 	display: inline-block;
-	background-color: #ccc;
+	background-color: #fff;
 	font-size: 1em;
+
+	border: 0;
+	padding: 10px;
+	outline: 0;
+
+	@include material-shadow;
 
 	&:not(&--nfw) { // not full width
 		display: block;
 		width: 100%;
 	}
 
-	padding: 5px;
-
 	user-select: none;
 	cursor: pointer;
+
+	@include transition(.5s);
+
+	&[data-selected] {
+		background-color: #aaa;
+		color: #fff;
+	}
 
 	&__name {
 		&--alt-names-list {
@@ -120,13 +129,12 @@ ul {
 
 .comps {
 	background-color: lighten($baseColor, 20%);
-	padding: 5px;
+	padding: 10px;
 }
 
 .comp {
 	font-size: 18px;
 	line-height: 1.3em;
-	padding: 5px;
 
 	&:not([data-selected]) {
 		display: none;
@@ -178,7 +186,7 @@ ul {
 
 		&--themes, &--ach ul {
 			li {
-				&:not(:first-child) {
+				&:first-child {
 					margin-top: 0;
 				}
 
@@ -222,15 +230,22 @@ ul {
 			}
 
 			ul {
-				margin-top: 5px;
-				padding: 5px;
+				margin-top: 10px;
+				padding: 10px;
 				border: 1px solid #ccc;
+
+				li {
+					background-color: #fff;
+					padding: 10px;
+
+					@include material-shadow;
+				}
 			}
 		}
 	}
 
 	&__games {
-		margin-top: 10px;
+		margin-top: 15px;
 	}
 }
 
@@ -238,6 +253,8 @@ ul {
 	position: relative;
 	background-color: #fff;
 	padding: 10px;
+
+	@include material-shadow;
 
 	font-size: 0;
 

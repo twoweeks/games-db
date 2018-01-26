@@ -16,15 +16,17 @@ $create.db = {
 	}
 }
 
-let parseLocalComps = comps => {
+let parseLocalNames = comps => {
 	let
-		namesContainer = $make.qs('.names'),
-		namesList = $create.elem('ul')
+		namesContainer =  $make.qs('.names'),
+		namesList =       $create.elem('ul')
 
 	comps.forEach(comp => {
 		let
 			nameListItem =  $create.elem('li'),
 			nameButton =    $create.elem('button', comp.name, 'btn btn__name')
+
+		nameButton.dataset.name = comp.file
 
 		if (comp.altNames && comp.altNames.length != 0) {
 			let altNamesList = $create.elem('ul', '', 'btn__name--alt-names-list')
@@ -38,7 +40,7 @@ let parseLocalComps = comps => {
 		}
 
 		nameButton.addEventListener('click', e => {
-			getCompData(comp.file)
+			selectName(comp.file)
 		})
 
 		nameListItem.appendChild(nameButton)
@@ -56,29 +58,96 @@ let parseGame = gameObject => {
 	let gameBox = $create.elem('div', '', 'comp_games--game _game')
 
 	let parseGameLinks = linksObject => {
-		let linksElem = $create.elem('div', '', '_game__info--download')
+		let linksElem = $create.elem('table', '', '_game__info--links')
 
-		Object.keys(linksObject).forEach(key => {
-			switch (key) {
+		linksElem.appendChild($create.elem('caption', 'Ссылки:'))
+
+		let linksArray = []
+
+		let prepareLinksArray = _linksObject => {
+			let tmpArray = []
+
+			let pushToArray = _obj => tmpArray.push(_obj)
+
+			let linkKeys = ['site', 'store', 'source', 'updated', 'final', 'dlc', 'demo_updated', 'demo', 'ost']
+
+			for (let key of linkKeys) {
+				if (key in _linksObject) {
+					pushToArray({ type: key, content: _linksObject[key] })
+				}
+			}
+
+			return tmpArray
+		}
+
+		linksArray = prepareLinksArray(linksObject)
+
+		linksArray.forEach(link => {
+			let	tableRow = $create.elem('tr')
+
+			let addToRow = (content, type) => {
+				if (!type) { type = 'html' }
+
+				tableRow.innerHTML = (type == 'html')
+					? content
+					: content()
+			}
+
+			let parseLinkContent = (content, type) => {
+				if (!type) { type = 'standart' }
+
+				let html = ''
+
+				switch (type) {
+					case 'store':
+						if ('steam' in content) { html += $create.link(`https://store.steampowered.com/app/${content.steam}`, 'Steam', '', ['e', 'html']) }
+						if ('gplay' in content) { html += $create.link(`https://play.google.com/store/apps/details?id=${content.gplay}`, 'Google Play', '', ['e', 'html']) }
+						if ('itunes' in content) { html += $create.link(`https://itunes.apple.com/app/id${content.itunes}`, 'App Store', '', ['e', 'html']) }
+						if ('itch' in content) { html += $create.link(`https://${content.itch.user}.itch.io/${content.itch.game}`, 'itch.io', '', ['e', 'html']) }
+						if ('gamejolt' in content) { html += $create.link(`https://gamejolt.com/games/${content.gamejolt}`, 'Game Jolt', '', ['e', 'html']) }
+						break;
+					case 'standart':
+						if ('yadisk' in content) { html += $create.link(`https://yadi.sk/d/${content.yadisk}`, 'Яндекс.Диск', '', ['e', 'html']) }
+						if ('gdrive' in content) { html += $create.link(`https://drive.google.com/open?id=${content.gdrive}`, 'Google Drive', '', ['e', 'html']) }
+						if ('web' in content) { html += $create.link(content.web, 'Онлайн-версия', '', ['e', 'html']) }
+						break;
+					case 'source':
+						if ('repo' in content) {
+							if ('github' in content.repo) { html += $create.link(`https://github.com/${content.repo.github}`, 'GitHub', '', ['e', 'html']) }
+							if ('bitbucket' in content.repo) { html += $create.link(`https://bitbucket.com/${content.repo.bitbucket}`, 'BitBucket', '', ['e', 'html']) }
+						}
+						if ('link' in content) { html += $create.link(content.link, 'Ссылка', '', ['e', 'html']) }
+						break;
+					case 'ost':
+						if ('soundcloud' in content) { html += $create.link(`https://soundcloud.com/${content.soundcloud}`, 'Ссылка', '', ['e', 'html']) }
+						break;
+				}
+				return html
+			}
+
+			switch (link.type) {
 				case 'site':
-					break;
+					addToRow(`<td>Сайт игры:</td><td>${$create.link(linksObject[link.type], linksObject[link.type], '', ['e', 'html'])}</td>`); break
 				case 'store':
+					addToRow(`<td>Магазины</td><td>${parseLinkContent(link.content, link.type)}</td>`); break
 					break;
 				case 'updated':
-					break;
+					addToRow(`<td>Обновлённая финальная версия</td><td>${parseLinkContent(link.content)}</td>`); break
 				case 'final':
-					break;
+					addToRow(`<td>Финальная версия</td><td>${parseLinkContent(link.content)}</td>`); break
 				case 'dlc':
-					break;
+					addToRow(`<td>DLC</td><td>${parseLinkContent(link.content)}</td>`); break
 				case 'demo_updated':
-					break;
+					addToRow(`<td>Обновлённая демоверсия</td><td>${parseLinkContent(link.content)}</td>`); break
 				case 'demo':
-					break;
+					addToRow(`<td>Демоверсия</td><td>${parseLinkContent(link.content)}</td>`); break
 				case 'source':
-					break;
-				default:
-					console.warn(`Некорректная ссылка "${key}" у игры "${game.name}"`)
+					addToRow(`<td>Исходный код</td><td>${parseLinkContent(link.content, link.type)}</td>`); break
+				case 'ost':
+					addToRow(`<td>Саундтрек</td><td>${parseLinkContent(link.content, link.type)}</td>`); break
 			}
+
+			linksElem.appendChild(tableRow)
 		})
 
 		return linksElem
@@ -157,8 +226,8 @@ let parseGame = gameObject => {
 	gameInfoBox.appendChild(gameInfoStatus)
 
 	if (game.links && Object.keys(game.links) != 0) {
-		let gameInfoDownload = parseGameLinks(game.links)
-		gameInfoBox.appendChild(gameInfoDownload)
+		let gameInfoLinks = parseGameLinks(game.links)
+		gameInfoBox.appendChild(gameInfoLinks)
 	}
 
 	gameBox.appendChild(gameInfoBox)
@@ -215,7 +284,7 @@ let getCompData = file => {
 			compsListContainer.textContent = ''
 			compsContainer.textContent = ''
 			return response.json()
-		} else { throw 42 }
+		} else { throw `Запрошенного конкурса "${file}" нет в базе данных.` }
 	}).then(result => {
 		let compsList = $create.elem('ul')
 
@@ -274,7 +343,7 @@ let getCompData = file => {
 			}
 
 			if (comp.note && comp.note != '') {
-				let compBoxHeaderNote = $create.elem('div', $create.elem('p', `Примечание: ${$create.db.textBlocks(comp.note)}`, '', ['html']), 'comp__header--note')
+				let compBoxHeaderNote = $create.elem('div', $create.elem('p', $create.db.textBlocks(`Примечание: ${comp.note}`), '', ['html']), 'comp__header--note')
 
 				compBoxHeader.appendChild(compBoxHeaderNote)
 			}
@@ -296,11 +365,11 @@ let getCompData = file => {
 					}
 
 					if (ach.gift && ach.gift != '') {
-						achListItem.appendChild($create.elem('p', $create.db.textBlocks(`<b>Приз</b>: ${ach.description}`)))
+						achListItem.appendChild($create.elem('p', $create.db.textBlocks(`<b>Приз</b>: ${ach.gift}`)))
 					}
 
-					if (ach.win && ach.win != '') {
-						achListItem.appendChild($create.elem('p', $create.db.textBlocks(`<b>Победитель</b>: ${ach.description}`)))
+					if (ach.winner && ach.winner != '') {
+						achListItem.appendChild($create.elem('p', $create.db.textBlocks(`<b>Победитель</b>: ${ach.winner}`)))
 					}
 
 					compBoxAchList.appendChild(achListItem)
@@ -378,8 +447,46 @@ let getCompData = file => {
 	}).catch(e => { console.warn(e) })
 }
 
+let selectName = name => {
+	let
+		nameList = $make.qs('.names'),
+		nameListBtns = $make.qsf('.btn__name', nameList, ['a'])
+
+	let nameListData = nameList.dataset
+
+	if (nameListData.selected == name) {
+		return
+	} else {
+		getCompData(name)
+	}
+
+	nameListBtns.forEach(btn => {
+		let btnData = btn.dataset
+
+		if (nameListData.selected == name) {
+			return
+		}
+
+		if ('selected' in btnData) {
+			delete btnData.selected
+		}
+
+		if (btnData.name == name) {
+			btnData.selected = ''
+			//getCompData(name)
+		}
+	})
+
+	nameListData.selected = name
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-	parseLocalComps([
+	['names', 'comps-list', 'comps'].reverse().forEach(_class => {
+		let body = document.body
+		body.insertBefore($create.elem('div', '', _class), body.firstChild)
+	})
+
+	parseLocalNames([
 		{ name: 'Two Weeks Game', file: 'twg' },
 		{ name: 'Two-Two Weeks Game', file: 'ttwg' },
 		{ name: 'One Week Game', altNames: ['Two/Two Weeks Game'], file: 'owg' },
@@ -387,6 +494,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		{ name: 'Two Days Game', file: 'two-dg' }
 	])
 
-	let compFromURL = $check.get('get') || 'twg'
-	getCompData(compFromURL)
+	//let nameFromURL = $check.get('get') || 'twg'
+	selectName('twg')
 })
