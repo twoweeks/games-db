@@ -1,2 +1,2 @@
-each lib in [{ name: 'kamina-js', path: 'dist/kamina', v: '1.2.5' }]
-	script(src=`https://cdn.jsdelivr.net/npm/${lib.name}@${lib.v}/${lib.path}.min.js` defer)
+each lib in [{ name: 'kamina-js', path: 'dist/kamina', v: '1.2.5', sha: 'sha256-i36vcXPfIgZkuJwkpKz9JvaubfUQKgpfBVrK7UQWJfs=' }]
+	script(src=`https://cdn.jsdelivr.net/npm/${lib.name}@${lib.v}/${lib.path}.min.js` integrity=`${lib.sha}` crossorigin='anonymous' defer)

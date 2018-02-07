@@ -59,6 +59,8 @@ ul {
 .btn {
 	--sub-font-size: .7em;
 
+	$_btnBckgColor: #fff;
+
 	display: inline-block;
 	background-color: #fff;
 	font-size: 1em;
@@ -68,6 +70,14 @@ ul {
 	outline: 0;
 
 	@include material-shadow;
+
+	&:hover {
+		background-color: darken($_btnBckgColor, 5%);
+	}
+
+	&:focus {
+		background-color: darken($_btnBckgColor, 10%);
+	}
 
 	&:not(&--nfw) { // not full width
 		display: block;
@@ -80,7 +90,7 @@ ul {
 	@include transition(.5s);
 
 	&[data-selected] {
-		background-color: #aaa;
+		background-color: darken($_btnBckgColor, 50%);
 		color: #fff;
 	}
 
@@ -273,6 +283,10 @@ ul {
 		& > *:first-child {
 			width: 100%;
 		}
+
+		._game__info {
+			padding: 0;
+		}
 	}
 
 	&__image {
@@ -306,6 +320,21 @@ ul {
 			position: absolute;
 			top: 10px; right: 10px;
 			font-size: 1.5em;
+		}
+
+		&--links {
+			tr {
+				td {
+					&:first-child {
+						padding: 2.5px 5px;
+						text-align: right;
+					}
+
+					vertical-align: middle;
+
+					a { margin-right: 5px }
+				}
+			}
 		}
 	}
 }

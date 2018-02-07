@@ -98,30 +98,33 @@ let parseGame = gameObject => {
 
 				let html = ''
 
+				let addLinkToContent = (link, text, _class) => html += $create.link(link, text, _class, ['e', 'html'])
+
 				switch (type) {
 					case 'store':
-						if ('steam' in content) { html += $create.link(`https://store.steampowered.com/app/${content.steam}`, 'Steam', '', ['e', 'html']) }
-						if ('gplay' in content) { html += $create.link(`https://play.google.com/store/apps/details?id=${content.gplay}`, 'Google Play', '', ['e', 'html']) }
-						if ('itunes' in content) { html += $create.link(`https://itunes.apple.com/app/id${content.itunes}`, 'App Store', '', ['e', 'html']) }
-						if ('itch' in content) { html += $create.link(`https://${content.itch.user}.itch.io/${content.itch.game}`, 'itch.io', '', ['e', 'html']) }
-						if ('gamejolt' in content) { html += $create.link(`https://gamejolt.com/games/${content.gamejolt}`, 'Game Jolt', '', ['e', 'html']) }
+						if ('steam' in content) { addLinkToContent(`https://store.steampowered.com/app/${content.steam}`, 'Steam') }
+						if ('gplay' in content) { addLinkToContent(`https://play.google.com/store/apps/details?id=${content.gplay}`, 'Google Play') }
+						if ('itunes' in content) { addLinkToContent(`https://itunes.apple.com/app/id${content.itunes}`, 'App Store') }
+						if ('itch' in content) { addLinkToContent(`https://${content.itch.user}.itch.io/${content.itch.game}`, 'itch.io') }
+						if ('gamejolt' in content) { addLinkToContent(`https://gamejolt.com/games/${content.gamejolt}`, 'Game Jolt') }
 						break;
 					case 'standart':
-						if ('yadisk' in content) { html += $create.link(`https://yadi.sk/d/${content.yadisk}`, 'Яндекс.Диск', '', ['e', 'html']) }
-						if ('gdrive' in content) { html += $create.link(`https://drive.google.com/open?id=${content.gdrive}`, 'Google Drive', '', ['e', 'html']) }
-						if ('web' in content) { html += $create.link(content.web, 'Онлайн-версия', '', ['e', 'html']) }
+						if ('yadisk' in content) { addLinkToContent(`https://yadi.sk/d/${content.yadisk}`, 'Яндекс.Диск') }
+						if ('gdrive' in content) { addLinkToContent(`https://drive.google.com/open?id=${content.gdrive}`, 'Google Drive') }
+						if ('web' in content) { html += addLinkToContent(content.web, 'Онлайн-версия') }
 						break;
 					case 'source':
 						if ('repo' in content) {
-							if ('github' in content.repo) { html += $create.link(`https://github.com/${content.repo.github}`, 'GitHub', '', ['e', 'html']) }
-							if ('bitbucket' in content.repo) { html += $create.link(`https://bitbucket.com/${content.repo.bitbucket}`, 'BitBucket', '', ['e', 'html']) }
+							if ('github' in content.repo) { addLinkToContent(`https://github.com/${content.repo.github}`, 'GitHub') }
+							if ('bitbucket' in content.repo) { addLinkToContent(`https://bitbucket.com/${content.repo.bitbucket}`, 'BitBucket') }
 						}
-						if ('link' in content) { html += $create.link(content.link, 'Ссылка', '', ['e', 'html']) }
+						if ('link' in content) { addLinkToContent(content.link, 'Ссылка') }
 						break;
 					case 'ost':
-						if ('soundcloud' in content) { html += $create.link(`https://soundcloud.com/${content.soundcloud}`, 'Ссылка', '', ['e', 'html']) }
+						if ('soundcloud' in content) { addLinkToContent(`https://soundcloud.com/${content.soundcloud}`, 'SoundCloud') }
 						break;
 				}
+
 				return html
 			}
 
@@ -403,6 +406,10 @@ let getCompData = file => {
 						comp.games.push(game)
 					}
 				})
+
+				/*
+				 * @TODO придумать, что делать с repeat'ами.
+				 */
 
 				comp.games.forEach(game => {
 					let gameBox = parseGame(game)
