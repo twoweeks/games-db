@@ -2,7 +2,7 @@
 	"name": "gd-games-database",
 	"description": "Игры с конкурсов /gd/.",
 	"private": true,
-	"version": "0.1.6",
+	"version": "0.1.7",
 	"author": "Dmitry <dmitry@cojam.ru> (https://e965.ru)",
 	"repository": "github:twoweeks/games-db",
 	"license": "MIT",
@@ -20,6 +20,6 @@
 		"gulp-uglify": "3.0.0",
 		"gulp-watch": "5.0.0",
 		"gulp-watch-sass": "1.4.0",
-		"uglify-es": "3.3.9"
+		"uglify-es": "3.3.10"
 	}
 }

@@ -15,8 +15,11 @@ html(lang='ru')
 			link(rel='stylesheet' href=`https://fonts.googleapis.com/css?family=${font}`)
 
 		link(rel='stylesheet' href=`${PATHS.css}/style.min.css?v=${VERSION}`)
-	body
-		// ¯\_(ツ)_/¯ 
+
+	body.no-js
+		noscript
+			p На дворе уже роботы по улицам ходят и магазины работают на самообслуживании, а у тебя до сих пор JavaScript в браузере отключен.
+			p Стыдно, стыдно.
 
 		include inc/vendor-js.pug
 

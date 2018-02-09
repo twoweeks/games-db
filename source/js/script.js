@@ -96,9 +96,9 @@ let parseGame = gameObject => {
 			let parseLinkContent = (content, type) => {
 				if (!type) { type = 'standart' }
 
-				let html = ''
+				let linksContentList = $create.elem('ul')
 
-				let addLinkToContent = (link, text, _class) => html += $create.link(link, text, _class, ['e', 'html'])
+				let addLinkToContent = (link, text, _class) => linksContentList.appendChild($create.elem('li', $create.link(link, text, _class, ['e', 'html'])))
 
 				switch (type) {
 					case 'store':
@@ -107,30 +107,30 @@ let parseGame = gameObject => {
 						if ('itunes' in content) { addLinkToContent(`https://itunes.apple.com/app/id${content.itunes}`, 'App Store') }
 						if ('itch' in content) { addLinkToContent(`https://${content.itch.user}.itch.io/${content.itch.game}`, 'itch.io') }
 						if ('gamejolt' in content) { addLinkToContent(`https://gamejolt.com/games/${content.gamejolt}`, 'Game Jolt') }
-						break;
+						break
 					case 'standart':
 						if ('yadisk' in content) { addLinkToContent(`https://yadi.sk/d/${content.yadisk}`, 'Яндекс.Диск') }
 						if ('gdrive' in content) { addLinkToContent(`https://drive.google.com/open?id=${content.gdrive}`, 'Google Drive') }
-						if ('web' in content) { html += addLinkToContent(content.web, 'Онлайн-версия') }
-						break;
+						if ('web' in content) { addLinkToContent(content.web, 'Онлайн-версия') }
+						break
 					case 'source':
 						if ('repo' in content) {
 							if ('github' in content.repo) { addLinkToContent(`https://github.com/${content.repo.github}`, 'GitHub') }
 							if ('bitbucket' in content.repo) { addLinkToContent(`https://bitbucket.com/${content.repo.bitbucket}`, 'BitBucket') }
 						}
 						if ('link' in content) { addLinkToContent(content.link, 'Ссылка') }
-						break;
+						break
 					case 'ost':
 						if ('soundcloud' in content) { addLinkToContent(`https://soundcloud.com/${content.soundcloud}`, 'SoundCloud') }
-						break;
+						break
 				}
 
-				return html
+				return linksContentList.outerHTML
 			}
 
 			switch (link.type) {
 				case 'site':
-					addToRow(`<td>Сайт игры:</td><td>${$create.link(linksObject[link.type], linksObject[link.type], '', ['e', 'html'])}</td>`); break
+					addToRow(`<td>Сайт игры:</td><td>${$create.link(linksObject[link.type], linksObject[link.type].replace(/^(https?):\/\//, ''), '', ['e', 'html'])}</td>`); break
 				case 'store':
 					addToRow(`<td>Магазины</td><td>${parseLinkContent(link.content, link.type)}</td>`); break
 					break;
@@ -177,30 +177,6 @@ let parseGame = gameObject => {
 
 	let gameInfoBox = $create.elem('div', '', '_game__info')
 
-	let gameInfoName = $create.elem('h2', $create.db.icon('videogame_asset'), '_game__info--name _middle')
-
-	gameInfoName.appendChild($create.elem('span', (game.name && game.name != '') ? game.name : 'Названия нет'))
-
-	gameInfoBox.appendChild(gameInfoName)
-
-	if (game.genre && game.genre != '') {
-		gameInfoBox.appendChild($create.elem('p', `Жанр: ${game.genre}`))
-	}
-
-	gameInfoBox.appendChild($create.elem('div', game.description ? $create.db.textBlocks(game.description) : 'Описания нет.', '_game__info--description'))
-
-	if (game.tools && game.tools != '') {
-		gameInfoBox.appendChild($create.elem('p', `Инструменты: ${game.tools}`))
-	}
-
-	if (game.dependencies && game.dependencies != '') {
-		gameInfoBox.appendChild($create.elem('p', `Зависимости: ${game.dependencies}`))
-	}
-
-	if (game.note && game.note != '') {
-		gameInfoBox.appendChild($create.elem('p', `Примечание: ${game.note}`))
-	}
-
 	let gameInfoStatusName = ''
 
 	switch (game.status) {
@@ -227,6 +203,30 @@ let parseGame = gameObject => {
 	gameInfoStatus.firstChild.setAttribute('title', gameInfoStatusName)
 
 	gameInfoBox.appendChild(gameInfoStatus)
+
+	let gameInfoName = $create.elem('h2', $create.db.icon('videogame_asset'), '_game__info--name _middle')
+
+	gameInfoName.appendChild($create.elem('span', (game.name && game.name != '') ? game.name : 'Названия нет'))
+
+	gameInfoBox.appendChild(gameInfoName)
+
+	if (game.genre && game.genre != '') {
+		gameInfoBox.appendChild($create.elem('p', `Жанр: ${game.genre}`))
+	}
+
+	gameInfoBox.appendChild($create.elem('div', game.description ? $create.db.textBlocks(game.description) : 'Описания нет.', '_game__info--description'))
+
+	if (game.tools && game.tools != '') {
+		gameInfoBox.appendChild($create.elem('p', `Инструменты: ${game.tools}`))
+	}
+
+	if (game.dependencies && game.dependencies != '') {
+		gameInfoBox.appendChild($create.elem('p', `Зависимости: ${game.dependencies}`))
+	}
+
+	if (game.note && game.note != '') {
+		gameInfoBox.appendChild($create.elem('p', `Примечание: ${game.note}`))
+	}
 
 	if (game.links && Object.keys(game.links) != 0) {
 		let gameInfoLinks = parseGameLinks(game.links)
@@ -256,6 +256,12 @@ let getCompData = file => {
 			...$make.qsf('.comp', compsContainer, ['a'])
 		]
 
+		if (!('edition' in comp)) {
+			comp.edition = '_none'
+		}
+
+		let _trigger = false
+
 		elems.forEach(elem => {
 			let elemData = elem.dataset
 
@@ -265,6 +271,21 @@ let getCompData = file => {
 
 			if (elemData.num == comp.num && elemData.edition == comp.edition) {
 				elemData.selected = ''
+				_trigger = true
+
+				let editonString = (comp.edition != '_none')
+					? `&edition=${comp.edition}`
+					: ''
+
+				history.pushState('', document.title, `${window.location.pathname}?get=${file}&comp=${comp.num}${editonString}`)
+
+				if (elem.classList.contains('btn')) {
+					elem.scrollIntoView({
+						inline: 'center',
+						block: 'center',
+						behavior: 'smooth'
+					})
+				}
 
 				if (elem.classList.contains('comp')) {
 					let compImages = $make.qsf('._game__image > img', elem, ['a'])
@@ -280,6 +301,10 @@ let getCompData = file => {
 				}
 			}
 		})
+
+		if (!_trigger) {
+			throw `Запрошенного конкурса ${file} под номером ${comp.num} (${comp.edition == '_none' ? 'без Edition' : `${comp.edition} Edition`}) нет в базе данных.`
+		}
 	}
 
 	fetch(`${CDN.data}/${file}.json`).then(response => {
@@ -450,8 +475,17 @@ let getCompData = file => {
 
 		compsListContainer.appendChild(compsList)
 
-		selectComp(JSON.parse(sessionStorage.getItem('db_firstCompInFile')))
-	}).catch(e => { console.warn(e) })
+		let neededComp = JSON.parse(sessionStorage.getItem('db_firstCompInFile'))
+
+		let compFromURL = JSON.parse(sessionStorage.getItem('db_compFromURL'))
+
+		if (compFromURL && Object.keys(compFromURL).includes('num')) {
+			neededComp = compFromURL
+			sessionStorage.removeItem('db_compFromURL')
+		}
+
+		selectComp(neededComp)
+	}).catch(e => { alert(e) })
 }
 
 let selectName = name => {
@@ -479,8 +513,12 @@ let selectName = name => {
 		}
 
 		if (btnData.name == name) {
+			btn.scrollIntoView({
+				inline: 'center',
+				block: 'center',
+				behavior: 'smooth'
+			})
 			btnData.selected = ''
-			//getCompData(name)
 		}
 	})
 
@@ -488,9 +526,13 @@ let selectName = name => {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-	['names', 'comps-list', 'comps'].reverse().forEach(_class => {
-		let body = document.body
-		body.insertBefore($create.elem('div', '', _class), body.firstChild)
+	let documentBody = document.body
+
+	documentBody.classList.remove('no-js')
+	documentBody.innerHTML = ''
+
+	new Array('names', 'comps-list', 'comps').reverse().forEach(_class => {
+		documentBody.insertBefore($create.elem('div', '', _class), documentBody.firstChild)
 	})
 
 	parseLocalNames([
@@ -501,6 +543,39 @@ document.addEventListener('DOMContentLoaded', () => {
 		{ name: 'Two Days Game', file: 'two-dg' }
 	])
 
-	//let nameFromURL = $check.get('get') || 'twg'
-	selectName('twg')
+	let compFromURL = {}
+
+	switch ($check.get('comp')) {
+		case null:
+		case true:
+		case '':
+			break
+		default:
+			compFromURL.num = $check.get('comp'); break
+	}
+
+	switch ($check.get('edition')) {
+		case null:
+		case true:
+		case '':
+		case '_none':
+			break
+		default:
+			compFromURL.edition = $check.get('edition'); break
+	}
+
+	sessionStorage.setItem('db_compFromURL', JSON.stringify(compFromURL))
+
+	let nameFromURL = ''
+
+	switch ($check.get('get')) {
+		case null:
+		case true:
+		case '':
+			nameFromURL = 'twg'; break
+		default:
+			nameFromURL = $check.get('get')
+	}
+
+	selectName(nameFromURL)
 })
