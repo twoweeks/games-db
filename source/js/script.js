@@ -156,7 +156,7 @@ let parseGame = gameObject => {
 		return linksElem
 	}
 
-	if (game.image && game.image != '') {
+	if ('image' in game && game.image != '') {
 		let
 			gameImageBox =       $create.elem('picture', '', '_game__image'),
 			gameImage =          $create.elem('img')
@@ -177,60 +177,74 @@ let parseGame = gameObject => {
 
 	let gameInfoBox = $create.elem('div', '', '_game__info')
 
-	let gameInfoStatusName = ''
+	let getGameStatusName = status => {
+		let _status = 'Неизвестный статус'
 
-	switch (game.status) {
-		case 'win': case '1':
-			gameInfoStatusName = 'Победитель'; break
-		case '2': case '3':
-		case '4': // ???
-			gameInfoStatusName = `${game.status} место`; break
-		case 'final':
-			gameInfoStatusName = 'Финалист'; break
-		case 'demo':
-			gameInfoStatusName = 'Демоверсия'; break
-		case 'updated':
-			gameInfoStatusName = 'Обновлённая версия'; break
-		case 'disqualified':
-			gameInfoStatusName = 'Дисквалификация'; break
-		default:
-			console.warn(`Неизвестный статус ${game.status} у ${game.name}`)
+		switch (status) {
+			case 'win': case '1':
+				_status = 'Победитель'; break
+			case '2': case '3':
+			case '4': // ???
+				_status = `${game.status} место`; break
+			case 'final':
+				_status = 'Финалист'; break
+			case 'demo':
+				_status = 'Демоверсия'; break
+			case 'updated':
+				_status = 'Обновлённая версия'; break
+			case 'disqualified':
+				_status = 'Дисквалификация'; break
+		}
+
+		return _status
 	}
 
-	/* @TODO дождаться, когда в пак иконок введут кубок, и заменить им звёздочку */
+	let gameInfoStatusName = getGameStatusName(game.status)
 
-	let gameInfoStatus = $create.elem('div', $create.db.icon((game.status != 'disqualified') ? 'star' : 'close'), `_game__info--status _status _status--${(game.status && game.status != '') ? game.status : 'empty'}`)
-	gameInfoStatus.firstChild.setAttribute('title', gameInfoStatusName)
+	if ('status' in game && game.status != '') {
+		/* @TODO дождаться, когда в пак иконок введут кубок, и заменить им звёздочку */
 
-	gameInfoBox.appendChild(gameInfoStatus)
+		let gameInfoStatus = $create.elem('div', $create.db.icon((game.status != 'disqualified') ? 'star' : 'close'), `_game__info--status _status _status--${(game.status && game.status != '') ? game.status : 'empty'}`)
+		gameInfoStatus.firstChild.setAttribute('title', gameInfoStatusName)
+
+		gameInfoBox.appendChild(gameInfoStatus)
+	} else {
+		console.warn(`${gameInfoStatusName} у ${game.name}`)
+	}
 
 	let gameInfoName = $create.elem('h2', $create.db.icon('videogame_asset'), '_game__info--name _middle')
 
-	gameInfoName.appendChild($create.elem('span', (game.name && game.name != '') ? game.name : 'Названия нет'))
+	gameInfoName.appendChild($create.elem('span', ('name' in game && game.name != '') ? game.name : 'Названия нет'))
 
 	gameInfoBox.appendChild(gameInfoName)
 
-	if (game.genre && game.genre != '') {
+	if ('genre' in game && game.genre != '') {
 		gameInfoBox.appendChild($create.elem('p', `Жанр: ${game.genre}`))
 	}
 
 	gameInfoBox.appendChild($create.elem('div', game.description ? $create.db.textBlocks(game.description) : 'Описания нет.', '_game__info--description'))
 
-	if (game.tools && game.tools != '') {
+	if ('tools' in game && game.tools != '') {
 		gameInfoBox.appendChild($create.elem('p', `Инструменты: ${game.tools}`))
 	}
 
-	if (game.dependencies && game.dependencies != '') {
+	if ('dependencies' in game && game.dependencies != '') {
 		gameInfoBox.appendChild($create.elem('p', `Зависимости: ${game.dependencies}`))
 	}
 
-	if (game.note && game.note != '') {
+	if ('note' in game && game.note != '') {
 		gameInfoBox.appendChild($create.elem('p', `Примечание: ${game.note}`))
 	}
 
-	if (game.links && Object.keys(game.links) != 0) {
+	if ('links' in game && Object.keys(game.links) != 0) {
 		let gameInfoLinks = parseGameLinks(game.links)
 		gameInfoBox.appendChild(gameInfoLinks)
+	}
+
+	if ('repeat' in game && game.repeat != '') {
+		let gameRepeatStatusName = getGameStatusName(game.repeat)
+
+		gameInfoBox.appendChild($create.elem('p', `<i>P.S. Эта игра также была отправлена в параллельно проходящий конкурс как ${gameRepeatStatusName}.</i>`, '_game__info--repeat'))
 	}
 
 	gameBox.appendChild(gameInfoBox)
@@ -293,7 +307,7 @@ let getCompData = file => {
 					compImages.forEach(image => {
 						let imageData = image.dataset
 
-						if (imageData.src && imageData.src != '') {
+						if ('src' in imageData && imageData.src != '') {
 							image.setAttribute('src', `${CDN.imgs}/${imageData.src}`)
 							delete imageData.src
 						}
@@ -323,7 +337,7 @@ let getCompData = file => {
 
 			compsListItemButton.appendChild($create.elem('span', `Конкурс №${comp.meta.num}`))
 
-			let isCompHaveEdition = (comp.meta.edition && comp.meta.edition != '') ? true : false
+			let isCompHaveEdition = ('edition' in comp.meta && comp.meta.edition != '') ? true : false
 
 			compsListItem.appendChild(compsListItemButton)
 			compsList.appendChild(compsListItem)
@@ -339,7 +353,7 @@ let getCompData = file => {
 
 			let compBoxHeaderTitle = $create.elem('h2', `<span>Конкурс №${comp.meta.num}</span>`, 'comp__header--title')
 
-			if (comp.site && comp.site != '') {
+			if ('site' in comp && comp.site != '') {
 				let compSiteLink = $create.link(comp.site, $create.db.icon('home'), '', ['e'])
 				compSiteLink.setAttribute('title', 'Сайт конкурса')
 				compBoxHeaderTitle.appendChild(compSiteLink)
@@ -352,7 +366,7 @@ let getCompData = file => {
 
 			compBoxHeader.appendChild(compBoxHeaderTitle)
 
-			if (comp.themes && comp.themes.length != 0) {
+			if ('themes' in comp && comp.themes.length != 0) {
 				let compBoxHeaderThemes = $create.elem('ul', '', 'comp__header--themes')
 
 				comp.themes.forEach(theme => {
@@ -360,7 +374,7 @@ let getCompData = file => {
 
 					themesListItem.appendChild($create.elem('p', `${$create.db.icon('label')}<span>${theme.name}</span>`, '_middle'))
 
-					if (theme.description) {
+					if ('description' in theme && theme.description != '') {
 						themesListItem.appendChild($create.elem('p', $create.db.textBlocks(theme.description)))
 					}
 
@@ -370,13 +384,13 @@ let getCompData = file => {
 				compBoxHeader.appendChild(compBoxHeaderThemes)
 			}
 
-			if (comp.note && comp.note != '') {
+			if ('note' in comp && comp.note != '') {
 				let compBoxHeaderNote = $create.elem('div', $create.elem('p', $create.db.textBlocks(`Примечание: ${comp.note}`), '', ['html']), 'comp__header--note')
 
 				compBoxHeader.appendChild(compBoxHeaderNote)
 			}
 
-			if (comp.achievements && comp.achievements != '') {
+			if ('achievements' in comp && comp.achievements != '') {
 				let
 					compBoxAhievements = $create.elem('details', '', 'comp__header--ach'),
 					compBoxAchList = $create.elem('ul')
@@ -388,15 +402,15 @@ let getCompData = file => {
 
 					achListItem.appendChild($create.elem('p', `${$create.db.icon('place')}<span>${ach.name}</span>`, 'comp__header--ach _middle'))
 
-					if (ach.description && ach.description != '') {
+					if ('description' in ach && ach.description != '') {
 						achListItem.appendChild($create.elem('p', $create.db.textBlocks(`<b>Описание</b>: ${ach.description}`), 'comp__header--ach'))
 					}
 
-					if (ach.gift && ach.gift != '') {
+					if ('gift' in ach && ach.gift != '') {
 						achListItem.appendChild($create.elem('p', $create.db.textBlocks(`<b>Приз</b>: ${ach.gift}`)))
 					}
 
-					if (ach.winner && ach.winner != '') {
+					if ('winner' in ach && ach.winner != '') {
 						achListItem.appendChild($create.elem('p', $create.db.textBlocks(`<b>Победитель</b>: ${ach.winner}`)))
 					}
 
@@ -407,13 +421,13 @@ let getCompData = file => {
 				compBoxHeader.appendChild(compBoxAhievements)
 			}
 
-			if (comp.fund && comp.fund != '') {
+			if ('fund' in comp && comp.fund != '') {
 				let compBoxHeaderFund = $create.elem('div', $create.elem('p', `Призовой фонд: ${comp.fund}`, '', ['html']), 'comp__header--fund')
 
 				compBoxHeader.appendChild(compBoxHeaderFund)
 			}
 
-			if (comp.dates) {
+			if ('dates' in comp) {
 				let compBoxHeaderDates = $create.elem('div', '', 'comp__header--dates')
 
 				if (comp.dates.start) { compBoxHeaderDates.appendChild($create.elem('p', `Начало конкурса: ${$create.db.time(comp.dates.start)}`)) }
@@ -424,17 +438,13 @@ let getCompData = file => {
 
 			compBox.appendChild(compBoxHeader)
 
-			if (comp.games && comp.games.length != 0) {
+			if ('games' in comp && comp.games.length != 0) {
 				comp.games.forEach((game, i) => {
 					if (game.status == 'disqualified') {
 						delete comp.games[i]
 						comp.games.push(game)
 					}
 				})
-
-				/*
-				 * @TODO придумать, что делать с repeat'ами.
-				 */
 
 				comp.games.forEach(game => {
 					let gameBox = parseGame(game)
@@ -526,14 +536,18 @@ let selectName = name => {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-	let documentBody = document.body
+	let
+		documentBody = document.body,
+		containerBox = $make.qs('.container')
 
 	documentBody.classList.remove('no-js')
-	documentBody.innerHTML = ''
+	containerBox.innerHTML = ''
 
-	new Array('names', 'comps-list', 'comps').reverse().forEach(_class => {
-		documentBody.insertBefore($create.elem('div', '', _class), documentBody.firstChild)
+	new Array('names', 'comps-list', 'comps').forEach(_class => {
+		containerBox.appendChild($create.elem('div', '', _class))
 	})
+
+	documentBody.insertBefore(containerBox, documentBody.firstChild)
 
 	parseLocalNames([
 		{ name: 'Two Weeks Game', file: 'twg' },
