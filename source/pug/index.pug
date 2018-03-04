@@ -11,8 +11,7 @@ html(lang='ru')
 		each URL in ['raw.githubusercontent.com', 'gd-cdn.blyat.science', 'fonts.gstatic.com']
 			link(rel='dns-prefetch' href=`https://${URL}`)
 
-		each font in ['Roboto', 'Material+Icons']
-			link(rel='stylesheet' href=`https://fonts.googleapis.com/css?family=${font}`)
+		link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto|Material+Icons')
 
 		link(rel='stylesheet' href=`${PATHS.css}/style.min.css?v=${VERSION}`)
 

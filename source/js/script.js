@@ -83,7 +83,7 @@ let parseGame = gameObject => {
 		linksArray = prepareLinksArray(linksObject)
 
 		linksArray.forEach(link => {
-			let	tableRow = $create.elem('tr')
+			let tableRow = $create.elem('tr')
 
 			let addToRow = (content, type) => {
 				if (!type) { type = 'html' }
