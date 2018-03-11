@@ -1,5 +1,10 @@
 'use strict'
 
+const storageRepoItem = {
+	name:       '_db_repo',
+	byDefault:  'twoweeks/db'
+}
+
 $create.db = {
 	icon: icon => `<i class="material-icons">${icon}</i>`,
 	textBlocks: text => `<span class="_tb">${text.replace(/\n/g, '</span><span class="_tb">')}</span>`,
@@ -40,7 +45,7 @@ let parseLocalNames = comps => {
 		}
 
 		nameButton.addEventListener('click', e => {
-			selectName(comp.file)
+			selectName({ name: comp.file })
 		})
 
 		nameListItem.appendChild(nameButton)
@@ -252,11 +257,17 @@ let parseGame = gameObject => {
 	return gameBox
 }
 
-let getCompData = file => {
-	if (!file) { file = 'twg' }
+let getCompData = options => {
+	let file = ('file' in options && options.file != '')
+		? options.file
+		: 'twg'
+
+	let repo = ('repo' in options && options.repo != '')
+		? options.repo
+		: storageRepoItem.byDefault
 
 	let CDN = {
-		data: 'https://raw.githubusercontent.com/twoweeks/db/master/json/min',
+		data: `https://raw.githubusercontent.com/${repo}/master/json/min`,
 		imgs: 'https://gd-cdn.blyat.science'
 	}
 
@@ -498,7 +509,15 @@ let getCompData = file => {
 	}).catch(e => { alert(e) })
 }
 
-let selectName = name => {
+let selectName = options => {
+	let name = ('name' in options && options.name != '')
+		? options.name
+		: 'twg'
+
+	let repo = ('repo' in options && options.repo != '')
+		? options.repo
+		: $ls.get(storageRepoItem.name)
+
 	let
 		nameList = $make.qs('.names'),
 		nameListBtns = $make.qsf('.btn__name', nameList, ['a'])
@@ -508,7 +527,10 @@ let selectName = name => {
 	if (nameListData.selected == name) {
 		return
 	} else {
-		getCompData(name)
+		getCompData({
+			file: name,
+			repo: repo
+		})
 	}
 
 	nameListBtns.forEach(btn => {
@@ -557,6 +579,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		{ name: 'Two Days Game', file: 'two-dg' }
 	])
 
+	if (!$ls.get(storageRepoItem.name)) {
+		$ls.set(storageRepoItem.name, storageRepoItem.byDefault)
+	}
+
 	let compFromURL = {}
 
 	switch ($check.get('comp')) {
@@ -591,5 +617,8 @@ document.addEventListener('DOMContentLoaded', () => {
 			nameFromURL = $check.get('get')
 	}
 
-	selectName(nameFromURL)
+	selectName({
+		name: nameFromURL,
+		repo: $ls.get(storageRepoItem.name)
+	})
 })

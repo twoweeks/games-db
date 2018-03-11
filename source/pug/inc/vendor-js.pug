@@ -1,2 +1,2 @@
-each lib in [{ name: 'kamina-js', path: 'dist/kamina', v: '1.2.6', sha: 'sha256-q8DqoFoC4zJTDnx9kxcQTP6j/pbQPQ9cLvTbS5VSh5U==' }]
-	script(src=`https://cdn.jsdelivr.net/npm/${lib.name}@${lib.v}/${lib.path}.min.js` integrity=`${lib.sha}` crossorigin='anonymous' defer)
+each lib in [{ name: 'url-search-params', path: 'build/url-search-params', v: '0.10.0', integrity: 'sha256-Tj0IK7neOvGa1FUIZ433DRvlP/Kv0ffbyyrgQOhdOro=' }, { name: 'kamina-js', path: 'dist/kamina.min', v: '1.2.7', integrity: 'sha256-O7VS3dDmlzbLeD77bEGhtckWN2plD9qFSTD0W7oMtsM=' }]
+	script(src=`https://cdn.jsdelivr.net/npm/${lib.name}@${lib.v}/${lib.path}.js` integrity=`${lib.integrity}` crossorigin='anonymous' defer)
