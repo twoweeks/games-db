@@ -1,4 +1,3 @@
-@import 'inc/vars';
 @import 'inc/mixins';
 
 * {
@@ -173,15 +172,15 @@ ul {
 }
 
 .names {
-	background-color: $baseColor;
+	background-color: $primeColor;
 }
 
 .comps-list {
-	background-color: lighten($baseColor, 10%);
+	background-color: lighten($primeColor, 10%);
 }
 
 .comps {
-	background-color: lighten($baseColor, 20%);
+	background-color: lighten($primeColor, 20%);
 	padding: 10px;
 }
 

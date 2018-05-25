@@ -2,20 +2,22 @@
 
 let
 	project =     require('./package.json'),
+	fs =          require('fs'),
 	gulp =        require('gulp'),
 	tube =        require('gulp-pipe'),
 	bom =         require('gulp-bom'),
 	rename =      require('gulp-rename'),
 	watch =       require('gulp-watch'),
 	plumber =     require('gulp-plumber'),
-	csso =        require('gulp-csso'),
+	cleanCSS =    require('gulp-clean-css'),
 	pug =         require('gulp-pug'),
+	parseYAML =   require('js-yaml'),
 	liveServer =  require('browser-sync')
 
 let sass = {
 	compile:  require('gulp-sass'),
 	watch:    require('gulp-watch-sass'),
-	vars:     require('gulp-sass-variables')
+	vars:     require('gulp-sass-vars')
 }
 
 let uglify = {
@@ -27,26 +29,28 @@ let
 	minifyJS = uglify.composer(uglify.core, console),
 	reloadServer = () => liveServer.stream()
 
-let folders = {
-	dev: 'source',
-	prod: {
-		root: 'docs',
-		main: 'assets'
-	}
-}
+let parseYAMLfile = fileName => parseYAML.load(fs.readFileSync(`./${fileName}.yaml`, 'utf8'))
+
+let config = parseYAMLfile('project-config')
+
+let vendors = parseYAMLfile('project-vendors')
+
+let dirs = config.dirs
 
 let paths = {
 	html: {
-		dev: [`${folders.dev}/pug/**/*.pug`, `!${folders.dev}/pug/inc/**/*.pug`],
-		prod: `${folders.prod.root}/`
+		dev: [`${dirs.dev}/pug/**/*.pug`, `!${dirs.dev}/pug/inc/**/*.pug`],
+		prod: `${dirs.prod.root}/`
 	},
+
 	js: {
-		dev: `${folders.dev}/js/**/*.js`,
-		prod: `${folders.prod.root}/${folders.prod.main}/js/`
+		dev: `${dirs.dev}/js/**/*.js`,
+		prod: `${dirs.prod.root}/${dirs.prod.main}/js/`
 	},
+
 	css: {
-		dev: `${folders.dev}/scss/**/*.scss`,
-		prod: `${folders.prod.root}/${folders.prod.main}/css/`
+		dev: `${dirs.dev}/scss/**/*.scss`,
+		prod: `${dirs.prod.root}/${dirs.prod.main}/css/`
 	}
 }
 
@@ -62,31 +66,38 @@ gulp.task('pug', () => tube([
 	pug({ locals: {
 		VERSION: project.version,
 		PATHS: {
-			js: `${folders.prod.main}/js`,
-			css: `${folders.prod.main}/css`,
-			img: `${folders.prod.main}/img`
-		}
+			js:   `/${dirs.prod.main}/js`,
+			css:  `/${dirs.prod.main}/css`,
+			img:  `/${dirs.prod.main}/img`
+		},
+		LIBS: vendors,
+		primeColor: config.prime_color
 	}}),
 	bom(),
 	gulp.dest(paths.html.prod),
 	reloadServer()
 ]))
 
-gulp.task('minify-js', () => tube([
-	watch(paths.js.dev, { ignoreInitial: false }),
+let jsTubes = (_src, _dest) => tube([
+	watch(_src, { ignoreInitial: false }),
 	plumber(),
 	minifyJS({}),
 	bom(),
 	rename({suffix: '.min'}),
-	gulp.dest(paths.js.prod),
+	gulp.dest(_dest),
 	reloadServer()
-]))
+])
+
+gulp.task('js:assets', () => jsTubes(paths.js.dev, paths.js.prod))
 
 let scssTubes = [
 	plumber(),
-	sass.vars({ $VERSION: project.version }),
+	sass.vars({
+		VERSION:     project.version,
+		primeColor:  config.prime_color
+	}),
 	sass.compile({outputStyle: 'compressed'}),
-	csso(),
+	cleanCSS(),
 	bom(),
 	rename({suffix: '.min'}),
 	gulp.dest(paths.css.prod)
@@ -100,5 +111,5 @@ gulp.task('scss:dev', () => tube(
 	[sass.watch(paths.css.dev)].concat(scssTubes, [reloadServer()])
 ))
 
-gulp.task('default', ['pug', 'minify-js', 'scss:dev'])
+gulp.task('default', ['pug', 'js:assets', 'scss:dev'])
 gulp.task('dev', ['liveReload', 'default'])

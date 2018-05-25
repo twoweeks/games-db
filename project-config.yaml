@@ -1,0 +1,7 @@
+prime_color: '#373737'
+
+dirs:
+  dev: source
+  prod:
+    root: docs
+    main: assets

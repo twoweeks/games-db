@@ -8,6 +8,8 @@ html(lang='ru')
 
 		meta(name='viewport' content='width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no')
 
+		meta(name='theme-color' content=`${primeColor}`)
+
 		each URL in ['raw.githubusercontent.com', 'gd-cdn.blyat.science', 'fonts.gstatic.com']
 			link(rel='dns-prefetch' href=`https://${URL}`)
 
@@ -17,12 +19,15 @@ html(lang='ru')
 
 	body.no-js
 		div.container
+
 		div.db-info
 			a(href='https://github.com/twoweeks/games-db' target='_blank' rel='nofollow noopener') Проект на GitHub
+
 		noscript
 			p На дворе уже роботы по улицам ходят и магазины работают на самообслуживании, а у тебя до сих пор JavaScript в браузере отключен.
 			p Стыдно, стыдно.
 
-		include inc/vendor-js.pug
+		each lib in LIBS
+			script(src=`https://cdn.jsdelivr.net/npm/${lib.name}@${lib.v}/${lib.path}.js` integrity=`${lib.integrity}` crossorigin='anonymous' defer)
 
 		script(src=`${PATHS.js}/script.min.js?v=${VERSION}` data-version=`${VERSION}` defer)
