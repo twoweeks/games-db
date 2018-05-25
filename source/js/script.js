@@ -138,7 +138,6 @@ let parseGame = gameObject => {
 					addToRow(`<td>Сайт игры:</td><td>${$create.link(linksObject[link.type], linksObject[link.type].replace(/^(https?):\/\//, ''), '', ['e', 'html'])}</td>`); break
 				case 'store':
 					addToRow(`<td>Магазины</td><td>${parseLinkContent(link.content, link.type)}</td>`); break
-					break;
 				case 'updated':
 					addToRow(`<td>Обновлённая финальная версия</td><td>${parseLinkContent(link.content)}</td>`); break
 				case 'final':
@@ -441,8 +440,13 @@ let getCompData = options => {
 			if ('dates' in comp) {
 				let compBoxHeaderDates = $create.elem('div', '', 'comp__header--dates')
 
-				if (comp.dates.start) { compBoxHeaderDates.appendChild($create.elem('p', `Начало конкурса: ${$create.db.time(comp.dates.start)}`)) }
-				if (comp.dates.end) { compBoxHeaderDates.appendChild($create.elem('p', `Конец конкурса: ${$create.db.time(comp.dates.end)}`)) }
+				if ('start' in comp.dates) {
+					compBoxHeaderDates.appendChild($create.elem('p', `Начало конкурса: ${$create.db.time(comp.dates.start)}`))
+				}
+
+				if ('end' in comp.dates) {
+					compBoxHeaderDates.appendChild($create.elem('p', `Конец конкурса: ${$create.db.time(comp.dates.end)}`))
+				}
 
 				compBoxHeader.appendChild(compBoxHeaderDates)
 			}
