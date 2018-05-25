@@ -28,6 +28,6 @@ html(lang='ru')
 			p Стыдно, стыдно.
 
 		each lib in LIBS
-			script(src=`https://cdn.jsdelivr.net/npm/${lib.name}@${lib.v}/${lib.path}.js` integrity=`${lib.integrity}` crossorigin='anonymous' defer)
+			script(src=`https://cdn.jsdelivr.net/npm/${lib.name}@${lib.v}/${lib.path}.js` integrity=`${lib.sri}` crossorigin='anonymous' defer)
 
 		script(src=`${PATHS.js}/script.min.js?v=${VERSION}` data-version=`${VERSION}` defer)

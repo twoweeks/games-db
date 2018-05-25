@@ -66,9 +66,9 @@ gulp.task('pug', () => tube([
 	pug({ locals: {
 		VERSION: project.version,
 		PATHS: {
-			js:   `/${dirs.prod.main}/js`,
-			css:  `/${dirs.prod.main}/css`,
-			img:  `/${dirs.prod.main}/img`
+			js:   `${dirs.prod.main}/js`,
+			css:  `${dirs.prod.main}/css`,
+			img:  `${dirs.prod.main}/img`
 		},
 		LIBS: vendors,
 		primeColor: config.prime_color
