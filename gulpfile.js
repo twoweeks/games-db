@@ -95,8 +95,8 @@ let scssTubes = [
 	sass.vars({
 		VERSION:     project.version,
 		primeColor:  config.prime_color
-	}),
-	sass.compile({outputStyle: 'compressed'}),
+	}, { verbose: false }),
+	sass.compile({ outputStyle: 'compressed' }),
 	cleanCSS(),
 	bom(),
 	rename({suffix: '.min'}),
