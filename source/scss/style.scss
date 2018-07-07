@@ -88,7 +88,7 @@ ul {
 	}
 
 	& > .material-icons {
-		&:after {
+		&::after {
 			content: '\00A0';
 		}
 	}
@@ -117,10 +117,6 @@ ul {
 		background-color: darken($_btnBckgColor, 5%);
 	}
 
-	&:focus {
-		background-color: darken($_btnBckgColor, 10%);
-	}
-
 	&:not(&--nfw) { // not full width
 		display: block;
 		width: 100%;
@@ -140,7 +136,7 @@ ul {
 		&--alt-names-list {
 			font-size: var(--sub-font-size);
 
-			li:before { content: 'aka ' }
+			li::before { content: 'aka ' }
 		}
 	}
 
@@ -227,8 +223,19 @@ ul {
 			}
 
 			small {
+				display: block;
+				margin-top: 5px;
+
 				font-size: .6em;
 				white-space: nowrap;
+
+				&::before {
+					content: ' ['
+				}
+
+				&::after {
+					content: '] '
+				}
 			}
 		}
 
@@ -271,12 +278,12 @@ ul {
 		}
 
 		&--ach {
-			summary:after {
+			summary::after {
 				content: 'Открыть ачивки'
 			}
 
 			&[open] {
-				summary:after {
+				summary::after {
 					content: 'Скрыть ачивки'
 				}
 			}
@@ -298,6 +305,14 @@ ul {
 
 	&__games {
 		margin-top: 15px;
+
+		&:empty {
+			text-align: center;
+
+			&:before {
+				content: 'Игр нет.'
+			}
+		}
 	}
 }
 
@@ -387,7 +402,7 @@ ul {
 							display: inline;
 							margin-top: 0;
 
-							&:not(:last-child):after {
+							&:not(:last-child)::after {
 								content: ' ';
 							}
 
@@ -436,7 +451,7 @@ ul {
 
 @media screen and (max-width: 992px) {
 	.container {
-		grid-template: auto auto auto / auto;
+		grid-template: 50px 50px auto / auto;
 	}
 
 	.db-info {
@@ -461,8 +476,8 @@ ul {
 			&--edition {
 				margin-left: 5px;
 
-				&:before { content: '(' }
-				&:after { content: ')' }
+				&::before { content: '(' }
+				&::after { content: ')' }
 			}
 		}
 	}

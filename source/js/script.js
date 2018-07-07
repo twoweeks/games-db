@@ -206,7 +206,7 @@ let parseGame = gameObject => {
 	let gameInfoStatusName = getGameStatusName(game.status)
 
 	if ('status' in game && game.status != '') {
-		/* @TODO дождаться, когда в пак иконок введут кубок, и заменить им звёздочку */
+		/* TODO: дождаться, когда в пак иконок введут кубок (github.com/google/material-design-icons/issues/136), и заменить звёздочку им */
 
 		let gameInfoStatus = $create.elem('div', $create.db.icon((game.status != 'disqualified') ? 'star' : 'close'), `_game__info--status _status _status--${(game.status && game.status != '') ? game.status : 'empty'}`)
 		gameInfoStatus.firstChild.setAttribute('title', gameInfoStatusName)
@@ -580,7 +580,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		{ name: 'Two-Two Weeks Game', file: 'ttwg' },
 		{ name: 'One Week Game', altNames: ['Two/Two Weeks Game'], file: 'owg' },
 		{ name: 'Three Days Game', file: 'three-dg' },
-		{ name: 'Two Days Game', file: 'two-dg' }
+		{ name: 'Two Days Game', file: 'two-dg' },
+		{ name: 'RUVN Contest', file: 'ruvn-contest' }
 	])
 
 	if (!$ls.get(storageRepoItem.name)) {

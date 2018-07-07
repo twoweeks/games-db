@@ -21,7 +21,7 @@ let sass = {
 }
 
 let uglify = {
-	core:      require('uglify-es'),
+	core:      require('terser'),
 	composer:  require('gulp-uglify/composer')
 }
 
@@ -78,17 +78,15 @@ gulp.task('pug', () => tube([
 	reloadServer()
 ]))
 
-let jsTubes = (_src, _dest) => tube([
-	watch(_src, { ignoreInitial: false }),
+gulp.task('js:assets', () => tube([
+	watch(paths.js.dev, { ignoreInitial: false }),
 	plumber(),
 	minifyJS({}),
 	bom(),
 	rename({suffix: '.min'}),
-	gulp.dest(_dest),
+	gulp.dest(paths.js.prod),
 	reloadServer()
-])
-
-gulp.task('js:assets', () => jsTubes(paths.js.dev, paths.js.prod))
+]))
 
 let scssTubes = [
 	plumber(),
@@ -103,7 +101,7 @@ let scssTubes = [
 	gulp.dest(paths.css.prod)
 ]
 
-gulp.task('scss:only-compile', () => tube(
+gulp.task('scss:build', () => tube(
 	[gulp.src(paths.css.dev)].concat(scssTubes)
 ))
 
