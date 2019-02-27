@@ -7,7 +7,9 @@ const storageRepoItem = {
 
 $create.db = {
 	icon: icon => `<i class="material-icons">${icon}</i>`,
+
 	textBlocks: text => `<span class="_tb">${text.replace(/\n/g, '</span><span class="_tb">')}</span>`,
+
 	time: timestamp => {
 		let formatter = new Intl.DateTimeFormat('ru', {
 			year: 'numeric',
@@ -107,26 +109,63 @@ let parseGame = gameObject => {
 
 				switch (type) {
 					case 'store':
-						if ('steam' in content) { addLinkToContent(`https://store.steampowered.com/app/${content.steam}`, 'Steam') }
-						if ('gplay' in content) { addLinkToContent(`https://play.google.com/store/apps/details?id=${content.gplay}`, 'Google Play') }
-						if ('itunes' in content) { addLinkToContent(`https://itunes.apple.com/app/id${content.itunes}`, 'App Store') }
-						if ('itch' in content) { addLinkToContent(`https://${content.itch.user}.itch.io/${content.itch.game}`, 'itch.io') }
-						if ('gamejolt' in content) { addLinkToContent(`https://gamejolt.com/games/${content.gamejolt}`, 'Game Jolt') }
+						if ('steam' in content) {
+							addLinkToContent(`https://store.steampowered.com/app/${content.steam}`, 'Steam')
+						}
+
+						if ('gplay' in content) {
+							addLinkToContent(`https://play.google.com/store/apps/details?id=${content.gplay}`, 'Google Play')
+						}
+
+						if ('itunes' in content) {
+							addLinkToContent(`https://itunes.apple.com/app/id${content.itunes}`, 'App Store')
+						}
+
+						if ('itch' in content) {
+							addLinkToContent(`https://${content.itch.user}.itch.io/${content.itch.game}`, 'itch.io')
+						}
+
+						if ('gamejolt' in content) {
+							addLinkToContent(`https://gamejolt.com/games/${content.gamejolt}`, 'Game Jolt')
+						}
+
 						break
+
 					case 'standart':
-						if ('yadisk' in content) { addLinkToContent(`https://yadi.sk/d/${content.yadisk}`, 'Яндекс.Диск') }
-						if ('gdrive' in content) { addLinkToContent(`https://drive.google.com/open?id=${content.gdrive}`, 'Google Drive') }
-						if ('web' in content) { addLinkToContent(content.web, 'Онлайн-версия') }
+						if ('yadisk' in content) {
+							addLinkToContent(`https://yadi.sk/d/${content.yadisk}`, 'Яндекс.Диск')
+						}
+
+						if ('gdrive' in content) {
+							addLinkToContent(`https://drive.google.com/open?id=${content.gdrive}`, 'Google Drive')
+						}
+
+						if ('web' in content) {
+							addLinkToContent(content.web, 'Онлайн-версия')
+						}
+
 						break
+
 					case 'source':
 						if ('repo' in content) {
-							if ('github' in content.repo) { addLinkToContent(`https://github.com/${content.repo.github}`, 'GitHub') }
-							if ('bitbucket' in content.repo) { addLinkToContent(`https://bitbucket.com/${content.repo.bitbucket}`, 'BitBucket') }
+							if ('github' in content.repo) {
+								addLinkToContent(`https://github.com/${content.repo.github}`, 'GitHub')
+							}
+
+							if ('bitbucket' in content.repo) {
+								addLinkToContent(`https://bitbucket.com/${content.repo.bitbucket}`, 'BitBucket')
+							}
 						}
-						if ('link' in content) { addLinkToContent(content.link, 'Ссылка') }
+						if ('link' in content) {
+							addLinkToContent(content.link, 'Ссылка')
+						}
 						break
+
 					case 'ost':
-						if ('soundcloud' in content) { addLinkToContent(`https://soundcloud.com/${content.soundcloud}`, 'SoundCloud') }
+						if ('soundcloud' in content) {
+							addLinkToContent(`https://soundcloud.com/${content.soundcloud}`, 'SoundCloud')
+						}
+
 						break
 				}
 
@@ -136,20 +175,28 @@ let parseGame = gameObject => {
 			switch (link.type) {
 				case 'site':
 					addToRow(`<td>Сайт игры:</td><td>${$create.link(linksObject[link.type], linksObject[link.type].replace(/^(https?):\/\//, ''), '', ['e', 'html'])}</td>`); break
+
 				case 'store':
 					addToRow(`<td>Магазины</td><td>${parseLinkContent(link.content, link.type)}</td>`); break
+
 				case 'updated':
 					addToRow(`<td>Обновлённая финальная версия</td><td>${parseLinkContent(link.content)}</td>`); break
+
 				case 'final':
 					addToRow(`<td>Финальная версия</td><td>${parseLinkContent(link.content)}</td>`); break
+
 				case 'dlc':
 					addToRow(`<td>DLC</td><td>${parseLinkContent(link.content)}</td>`); break
+
 				case 'demo_updated':
 					addToRow(`<td>Обновлённая демоверсия</td><td>${parseLinkContent(link.content)}</td>`); break
+
 				case 'demo':
 					addToRow(`<td>Демоверсия</td><td>${parseLinkContent(link.content)}</td>`); break
+
 				case 'source':
 					addToRow(`<td>Исходный код</td><td>${parseLinkContent(link.content, link.type)}</td>`); break
+
 				case 'ost':
 					addToRow(`<td>Саундтрек</td><td>${parseLinkContent(link.content, link.type)}</td>`); break
 			}
@@ -208,7 +255,14 @@ let parseGame = gameObject => {
 	if ('status' in game && game.status != '') {
 		/* TODO: дождаться, когда в пак иконок введут кубок (github.com/google/material-design-icons/issues/136), и заменить звёздочку им */
 
-		let gameInfoStatus = $create.elem('div', $create.db.icon((game.status != 'disqualified') ? 'star' : 'close'), `_game__info--status _status _status--${(game.status && game.status != '') ? game.status : 'empty'}`)
+		let gameInfoStatus = $create.elem(
+			'div',
+			$create.db.icon(
+				(game.status != 'disqualified') ? 'star' : 'close'
+			),
+			`_game__info--status _status _status--${(game.status && game.status != '') ? game.status : 'empty'}`
+		)
+
 		gameInfoStatus.firstChild.setAttribute('title', gameInfoStatusName)
 
 		gameInfoBox.appendChild(gameInfoStatus)
@@ -248,7 +302,12 @@ let parseGame = gameObject => {
 	if ('repeat' in game && game.repeat != '') {
 		let gameRepeatStatusName = getGameStatusName(game.repeat)
 
-		gameInfoBox.appendChild($create.elem('p', `<i>P.S. Эта игра также была отправлена в параллельно проходящий конкурс как ${gameRepeatStatusName}.</i>`, '_game__info--repeat'))
+		gameInfoBox.appendChild(
+			$create.elem('p',
+			`<i>P.S. Эта игра также была отправлена в параллельно проходящий конкурс как ${gameRepeatStatusName}.</i>`,
+			'_game__info--repeat'
+			)
+		)
 	}
 
 	gameBox.appendChild(gameInfoBox)

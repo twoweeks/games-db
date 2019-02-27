@@ -109,5 +109,5 @@ gulp.task('scss:dev', () => tube(
 	[sass.watch(paths.css.dev)].concat(scssTubes, [reloadServer()])
 ))
 
-gulp.task('default', ['pug', 'js:assets', 'scss:dev'])
-gulp.task('dev', ['liveReload', 'default'])
+gulp.task('default', gulp.parallel('pug', 'js:assets', 'scss:dev'))
+gulp.task('dev', gulp.parallel('liveReload', 'default'))
