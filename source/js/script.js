@@ -640,7 +640,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		{ name: 'One Week Game', altNames: ['Two/Two Weeks Game'], file: 'owg' },
 		{ name: 'Three Days Game', file: 'three-dg' },
 		{ name: 'Two Days Game', file: 'two-dg' },
-		{ name: 'RUVN Contest', file: 'ruvn-contest' }
+		{ name: 'RUVN Contest', file: 'ruvn-contest' },
+		{ name: 'Molnija Jam', file: 'molnija' }
 	])
 
 	if (!$ls.get(storageRepoItem.name)) {

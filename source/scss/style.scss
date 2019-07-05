@@ -171,13 +171,13 @@ ul {
 	background-color: $primeColor;
 }
 
-.comps-list {
-	background-color: lighten($primeColor, 10%);
-}
-
 .comps {
 	background-color: lighten($primeColor, 20%);
 	padding: 10px;
+
+	&-list {
+		background-color: lighten($primeColor, 10%);
+	}
 }
 
 .comp {
