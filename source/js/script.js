@@ -220,6 +220,10 @@ let parseGame = gameObject => {
 			console.warn(`Ошибка загрузки картинки у игры "${game.name}".`)
 		})
 
+		if ('loading' in HTMLImageElement.prototype) {
+			gameImage.setAttribute('loading', 'lazy')
+		}
+
 		gameImageBox.appendChild(gameImage)
 		gameBox.appendChild(gameImageBox)
 	} else {

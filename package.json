@@ -2,7 +2,7 @@
 	"name": "gd-games-database",
 	"description": "Игры с конкурсов /gd/.",
 	"private": true,
-	"version": "0.2.3",
+	"version": "0.2.4",
 	"author": "Dmitry <dmitry@cojam.ru> (https://e965.ru)",
 	"repository": "github:twoweeks/games-db",
 	"license": "MIT",
