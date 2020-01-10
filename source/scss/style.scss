@@ -141,7 +141,7 @@ ul {
 	}
 
 	&__comp {
-		&--edition {
+		&--mini {
 			font-size: var(--sub-font-size);
 		}
 	}
@@ -473,7 +473,7 @@ ul {
 				vertical-align: middle;
 			}
 
-			&--edition {
+			&--mini {
 				margin-left: 5px;
 
 				&::before { content: '(' }

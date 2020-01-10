@@ -8,6 +8,7 @@ let
 	bom =         require('gulp-bom'),
 	rename =      require('gulp-rename'),
 	watch =       require('gulp-watch'),
+	clean =       require('gulp-clean'),
 	plumber =     require('gulp-plumber'),
 	cleanCSS =    require('gulp-clean-css'),
 	pug =         require('gulp-pug'),
@@ -39,19 +40,19 @@ let dirs = config.dirs
 
 let paths = {
 	html: {
-		dev: [`${dirs.dev}/pug/**/*.pug`, `!${dirs.dev}/pug/inc/**/*.pug`],
-		prod: `${dirs.prod.root}/`
+		dev:   [`${dirs.dev}/pug/**/*.pug`, `!${dirs.dev}/pug/inc/**/*.pug`],
+		prod:   `${dirs.build}/`,
 	},
 
 	js: {
-		dev: `${dirs.dev}/js/**/*.js`,
-		prod: `${dirs.prod.root}/${dirs.prod.main}/js/`
+		dev:    `${dirs.dev}/js/**/*.js`,
+		prod:   `${dirs.build}/${dirs.assets}/js/`,
 	},
 
 	css: {
-		dev: `${dirs.dev}/scss/**/*.scss`,
-		prod: `${dirs.prod.root}/${dirs.prod.main}/css/`
-	}
+		dev:   `${dirs.dev}/scss/**/*.scss`,
+		prod:  `${dirs.build}/${dirs.assets}/css/`,
+	},
 }
 
 gulp.task('liveReload', () => liveServer({
@@ -60,33 +61,52 @@ gulp.task('liveReload', () => liveServer({
 	notify: false
 }))
 
-gulp.task('pug', () => tube([
-	watch(paths.html.dev, { ignoreInitial: false }),
+let pugTubes = [
 	plumber(),
 	pug({ locals: {
-		VERSION: project.version,
+		VERSION:     project.version,
+
 		PATHS: {
-			js:   `${dirs.prod.main}/js`,
-			css:  `${dirs.prod.main}/css`,
-			img:  `${dirs.prod.main}/img`
+			js:   `/${dirs.assets}/js`,
+			css:  `/${dirs.assets}/css`,
+			img:  `/${dirs.assets}/img`,
 		},
+
 		LIBS: vendors,
+
 		primeColor: config.prime_color
 	}}),
 	bom(),
-	gulp.dest(paths.html.prod),
-	reloadServer()
-]))
+	gulp.dest(paths.html.prod)
+]
 
-gulp.task('js:assets', () => tube([
-	watch(paths.js.dev, { ignoreInitial: false }),
+gulp.task('pug:build', () => tube(
+	[gulp.src(paths.html.dev)]
+		.concat(pugTubes)
+))
+
+gulp.task('pug:dev', () => tube(
+	[watch(paths.html.dev, { ignoreInitial: false })]
+		.concat(pugTubes, [reloadServer()])
+))
+
+let jsTubes = (dest = paths.js.prod) => [
 	plumber(),
 	minifyJS({}),
 	bom(),
-	rename({suffix: '.min'}),
-	gulp.dest(paths.js.prod),
-	reloadServer()
-]))
+	rename({ suffix: '.min' }),
+	gulp.dest(dest)
+]
+
+gulp.task('js:assets:build', () => tube(
+	[gulp.src(paths.js.dev)]
+		.concat(jsTubes())
+))
+
+gulp.task('js:assets:dev', () => tube(
+	[watch(paths.js.dev, { ignoreInitial: false })]
+		.concat(jsTubes(), [reloadServer()])
+))
 
 let scssTubes = [
 	plumber(),
@@ -97,7 +117,7 @@ let scssTubes = [
 	sass.compile({ outputStyle: 'compressed' }),
 	cleanCSS(),
 	bom(),
-	rename({suffix: '.min'}),
+	rename({ suffix: '.min' }),
 	gulp.dest(paths.css.prod)
 ]
 
@@ -109,5 +129,32 @@ gulp.task('scss:dev', () => tube(
 	[sass.watch(paths.css.dev)].concat(scssTubes, [reloadServer()])
 ))
 
-gulp.task('default', gulp.parallel('pug', 'js:assets', 'scss:dev'))
-gulp.task('dev', gulp.parallel('liveReload', 'default'))
+/* Копирование файлов из dirs.build и dirs.dist_static в одну общую dirs.dist */
+
+gulp.task('dist:copy', () => tube([
+	gulp.src([
+		`${dirs.build}/**/*`, `${dirs.build}/**/.*`,
+		`${dirs.dist_static}/**/*`, `${dirs.dist_static}/**/.*`
+	]),
+	gulp.dest(dirs.dist)
+]))
+
+gulp.task('dist:clean', () => tube([
+	gulp.src(dirs.dist, { read: false, allowEmpty: true }),
+	clean()
+]))
+
+gulp.task('dist', gulp.series('dist:clean', 'dist:copy'))
+
+/* Команды для сборки и разработки */
+
+gulp.task('build', gulp.parallel('pug:build', 'js:assets:build', 'scss:build'))
+
+gulp.task('build:clean', () => tube([
+	gulp.src(dirs.build, { read: false, allowEmpty: true }),
+	clean()
+]))
+
+gulp.task('dev', gulp.parallel('liveReload', 'pug:dev', 'js:assets:dev', 'scss:dev'))
+
+gulp.task('default', gulp.series('build:clean', 'build', 'dist'))

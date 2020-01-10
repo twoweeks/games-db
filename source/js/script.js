@@ -10,16 +10,10 @@ $create.db = {
 
 	textBlocks: text => `<span class="_tb">${text.replace(/\n/g, '</span><span class="_tb">')}</span>`,
 
-	time: timestamp => {
-		let formatter = new Intl.DateTimeFormat('ru', {
-			year: 'numeric',
-			month: 'long',
-			day: 'numeric',
-			hour: 'numeric',
-			minute: 'numeric'
-		})
-
-		return formatter.format(new Date(timestamp * 1000))
+	time: timeStamp => {
+		return new Date(timeStamp * 1000).toLocaleDateString(
+			[], { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }
+		)
 	}
 }
 
@@ -396,8 +390,8 @@ let getCompData = options => {
 
 	fetch(`${CDN.data}/${file}.json`).then(response => {
 		if (response.ok) {
-			compsListContainer.textContent = ''
-			compsContainer.textContent = ''
+			compsListContainer.innerText = ''
+			compsContainer.innerText = ''
 			return response.json()
 		} else { throw `Запрошенного конкурса "${file}" нет в базе данных.` }
 	}).then(result => {
@@ -410,7 +404,8 @@ let getCompData = options => {
 
 			compsListItemButton.appendChild($create.elem('span', `Конкурс №${comp.meta.num}`))
 
-			let isCompHaveEdition = ('edition' in comp.meta && comp.meta.edition != '') ? true : false
+			let isCompHaveEdition = 'edition' in comp.meta && comp.meta.edition != ''
+			let isCompHaveAKA = 'aka' in comp.meta && comp.meta.aka != ''
 
 			compsListItem.appendChild(compsListItemButton)
 			compsList.appendChild(compsListItem)
@@ -435,6 +430,11 @@ let getCompData = options => {
 			if (isCompHaveEdition) {
 				let compEdition = $create.elem('small', `${comp.meta.edition} Edition`)
 				compBoxHeaderTitle.appendChild(compEdition)
+			}
+
+			if (isCompHaveAKA) {
+				let compAKA = $create.elem('small', `aka ${comp.meta.aka}`)
+				compBoxHeaderTitle.appendChild(compAKA)
 			}
 
 			compBoxHeader.appendChild(compBoxHeaderTitle)
@@ -542,7 +542,7 @@ let getCompData = options => {
 
 				compData.edition = comp.meta.edition
 
-				let compsListItemEdtitonElem = $create.elem('p', `${comp.meta.edition} Edition`, 'btn__comp--edition')
+				let compsListItemEdtitonElem = $create.elem('p', `${comp.meta.edition} Edition`, 'btn__comp--mini')
 
 				compsListItemButton.appendChild(compsListItemEdtitonElem)
 			} else {
@@ -550,6 +550,11 @@ let getCompData = options => {
 				compBox.dataset.edition = '_none'
 
 				compData.edition = '_none'
+			}
+
+			if (isCompHaveAKA) {
+				let compsListItemAKAElem = $create.elem('p', `aka ${comp.meta.aka}`, 'btn__comp--mini')
+				compsListItemButton.appendChild(compsListItemAKAElem)
 			}
 
 			if (i == 0) {
@@ -625,9 +630,9 @@ let selectName = options => {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-	let
-		documentBody = document.body,
-		containerBox = $make.qs('.container')
+	let documentBody = document.body
+
+	let containerBox = $make.qs('.container')
 
 	documentBody.classList.remove('no-js')
 	containerBox.innerHTML = ''
@@ -644,8 +649,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		{ name: 'One Week Game', altNames: ['Two/Two Weeks Game'], file: 'owg' },
 		{ name: 'Three Days Game', file: 'three-dg' },
 		{ name: 'Two Days Game', file: 'two-dg' },
-		{ name: 'RUVN Contest', file: 'ruvn-contest' },
-		{ name: 'Molnija Jam', file: 'molnija' }
+		{ name: 'Molnija Jam', file: 'molnija' },
+		{ name: 'Toxic Jam', file: 'toxic' },
+		{ name: 'RUVN Contest', file: 'ruvn-contest' }
 	])
 
 	if (!$ls.get(storageRepoItem.name)) {

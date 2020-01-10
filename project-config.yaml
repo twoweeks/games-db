@@ -2,6 +2,7 @@ prime_color: '#373737'
 
 dirs:
   dev: source
-  prod:
-    root: docs
-    main: assets
+  build: build
+  dist: dist
+  dist_static: dist_static
+  assets: assets
