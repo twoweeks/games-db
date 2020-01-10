@@ -67,9 +67,9 @@ let pugTubes = [
 		VERSION:     project.version,
 
 		PATHS: {
-			js:   `/${dirs.assets}/js`,
-			css:  `/${dirs.assets}/css`,
-			img:  `/${dirs.assets}/img`,
+			js:   `./${dirs.assets}/js`,
+			css:  `./${dirs.assets}/css`,
+			img:  `./${dirs.assets}/img`,
 		},
 
 		LIBS: vendors,
