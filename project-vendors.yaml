@@ -1,8 +1,8 @@
 # jsdelivr.com/package/npm/kamina-js?path=dist (kamina.min.js)
 - name: kamina-js
-  v: 1.3.1
+  v: 1.3.2
   path: dist/kamina.min
-  sri: sha256-NeqDrp4SsFVhWQLw7czGq5WuZPXEJXob+jDW0iamh2s=
+  sri: sha256-dr47GarbRAmyhjmKZJkzGiGF2r/1kJlzFE+75ITwstw=
 
 # jsdelivr.com/package/npm/url-search-params?path=build (url-search-params.js)
 - name: url-search-params

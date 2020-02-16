@@ -2,7 +2,7 @@
 	"name": "gd-games-database-parser",
 	"description": "Парсер базы данных с играми с конкурсов /gd/.",
 	"private": true,
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"author": "Dmitry <dmitry@cojam.ru> (https://e965.ru)",
 	"repository": "github:twoweeks/games-db",
 	"license": "MIT",
@@ -19,7 +19,7 @@
 		"gh-pages": "2.2.0",
 		"gulp": "4.0.2",
 		"gulp-bom": "3.0.0",
-		"gulp-clean": "^0.4.0",
+		"gulp-clean": "0.4.0",
 		"gulp-clean-css": "4.2.0",
 		"gulp-pipe": "1.0.4",
 		"gulp-plumber": "1.2.1",
@@ -31,6 +31,6 @@
 		"gulp-watch": "5.0.1",
 		"gulp-watch-sass": "1.4.1",
 		"js-yaml": "3.13.1",
-		"terser": "4.6.2"
+		"terser": "4.6.3"
 	}
 }

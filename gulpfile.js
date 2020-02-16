@@ -56,7 +56,7 @@ let paths = {
 }
 
 gulp.task('liveReload', () => liveServer({
-	server: { baseDir: paths.html.prod },
+	server: [dirs.build, dirs.dist_static],
 	port: 8080,
 	notify: false
 }))

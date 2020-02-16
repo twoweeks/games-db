@@ -324,7 +324,7 @@ let getCompData = options => {
 
 	let CDN = {
 		data: `https://raw.githubusercontent.com/${repo}/master/json/min`,
-		imgs: 'https://gd-cdn.blyat.science'
+		imgs: 'https://cdn.blyat.science/gd'
 	}
 
 	let

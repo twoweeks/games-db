@@ -10,8 +10,8 @@ html(lang='ru')
 
 		meta(name='theme-color' content=`${primeColor}`)
 
-		each URL in ['raw.githubusercontent.com', 'gd-cdn.blyat.science', 'fonts.gstatic.com']
-			link(rel='dns-prefetch' href=`https://${URL}`)
+		each URL in ['raw.githubusercontent.com', 'cdn.blyat.science', 'fonts.gstatic.com']
+			link(rel='preconnect' href=`https://${URL}`)
 
 		link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Material+Icons|Roboto:400,500,700&subset=cyrillic-ext&display=swap')
 
