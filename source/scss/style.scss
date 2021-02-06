@@ -291,12 +291,12 @@ ul {
 
 		&--ach {
 			summary::after {
-				content: 'Открыть ачивки'
+				content: attr(data-open-text)
 			}
 
 			&[open] {
 				summary::after {
-					content: 'Скрыть ачивки'
+					content: attr(data-hide-text)
 				}
 			}
 
@@ -322,7 +322,7 @@ ul {
 			text-align: center;
 
 			&:before {
-				content: 'Игр нет.'
+				content: attr(data-no-games-text);
 			}
 		}
 	}

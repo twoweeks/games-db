@@ -468,6 +468,9 @@ let getCompData = options => {
 					compBoxAhievements = $create.elem('details', '', 'comp__header--ach'),
 					compBoxAchList = $create.elem('ul')
 
+				compBoxAhievements.dataset.openText = 'Открыть ачивки'
+				compBoxAhievements.dataset.hideText = 'Скрыть ачивки'
+
 				compBoxAhievements.appendChild($create.elem('summary', '', 'btn btn--nfw'))
 
 				comp.achievements.forEach(ach => {
@@ -529,6 +532,8 @@ let getCompData = options => {
 					compBoxGames.appendChild(gameBox)
 				})
 			}
+
+			compBoxGames.dataset.noGamesText = 'Игр нет. Возможно, больше информации есть на сайте конкурса.'
 
 			compBox.appendChild(compBoxGames)
 
