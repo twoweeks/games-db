@@ -2,7 +2,7 @@
 	"name": "gd-games-database-parser",
 	"description": "Парсер базы данных с играми с конкурсов /gd/.",
 	"private": true,
-	"version": "0.3.1",
+	"version": "0.3.2",
 	"author": "Dmitry <dmitry@cojam.ru> (https://e965.ru)",
 	"repository": "github:twoweeks/games-db",
 	"license": "MIT",
@@ -15,7 +15,7 @@
 		"deploy": "gh-pages -d dist"
 	},
 	"devDependencies": {
-		"browser-sync": "2.26.7",
+		"browser-sync": "^2.26.14",
 		"gh-pages": "2.2.0",
 		"gulp": "4.0.2",
 		"gulp-bom": "3.0.0",
