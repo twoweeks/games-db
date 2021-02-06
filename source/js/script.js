@@ -25,12 +25,12 @@ let parseLocalNames = comps => {
 	comps.forEach(comp => {
 		let
 			nameListItem =  $create.elem('li'),
-			nameButton =    $create.elem('button', comp.name, 'btn btn__name')
+			nameButton =    $create.elem('button', comp.name, 'btn btn--name')
 
 		nameButton.dataset.name = comp.file
 
 		if (comp.altNames && comp.altNames.length != 0) {
-			let altNamesList = $create.elem('ul', '', 'btn__name--alt-names-list')
+			let altNamesList = $create.elem('ul', '', 'btn--name__alt-names-list')
 
 			comp.altNames.forEach(name => {
 				let altNamesListItem = $create.elem('li', name)
@@ -268,7 +268,7 @@ let parseGame = gameObject => {
 		console.warn(`${gameInfoStatusName} у ${game.name}`)
 	}
 
-	let gameInfoName = $create.elem('h2', $create.db.icon('videogame_asset'), '_game__info--name _middle')
+	let gameInfoName = $create.elem('h2', '', '_game__info--name _middle')
 
 	gameInfoName.appendChild($create.elem('span', ('name' in game && game.name != '') ? game.name : 'Названия нет'))
 
@@ -333,7 +333,7 @@ let getCompData = options => {
 
 	let selectComp = comp => {
 		let elems = [
-			...$make.qsf('.btn__comp', compsListContainer, ['a']),
+			...$make.qsf('.btn--comp', compsListContainer, ['a']),
 			...$make.qsf('.comp', compsContainer, ['a'])
 		]
 
@@ -400,7 +400,7 @@ let getCompData = options => {
 		result.forEach((comp, i) => {
 			let
 				compsListItem =        $create.elem('li'),
-				compsListItemButton =  $create.elem('button', '', 'btn btn__comp')
+				compsListItemButton =  $create.elem('button', '', 'btn btn--comp')
 
 			compsListItemButton.appendChild($create.elem('span', `Конкурс №${comp.meta.num}`))
 
@@ -542,7 +542,7 @@ let getCompData = options => {
 
 				compData.edition = comp.meta.edition
 
-				let compsListItemEdtitonElem = $create.elem('p', `${comp.meta.edition} Edition`, 'btn__comp--mini')
+				let compsListItemEdtitonElem = $create.elem('p', `${comp.meta.edition} Edition`, 'btn--comp__mini')
 
 				compsListItemButton.appendChild(compsListItemEdtitonElem)
 			} else {
@@ -553,7 +553,7 @@ let getCompData = options => {
 			}
 
 			if (isCompHaveAKA) {
-				let compsListItemAKAElem = $create.elem('p', `aka ${comp.meta.aka}`, 'btn__comp--mini')
+				let compsListItemAKAElem = $create.elem('p', `aka ${comp.meta.aka}`, 'btn--comp__mini')
 				compsListItemButton.appendChild(compsListItemAKAElem)
 			}
 
@@ -592,7 +592,7 @@ let selectName = options => {
 
 	let
 		nameList = $make.qs('.names'),
-		nameListBtns = $make.qsf('.btn__name', nameList, ['a'])
+		nameListBtns = $make.qsf('.btn--name', nameList, ['a'])
 
 	let nameListData = nameList.dataset
 

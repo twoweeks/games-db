@@ -27,7 +27,7 @@ body {
 
 .container {
 	display: grid;
-	grid-template-columns: 225px 200px auto;
+	grid-template-columns: 200px 200px auto;
 
 	&:empty {
 		display: none;
@@ -99,7 +99,7 @@ ul {
 }
 
 .btn {
-	--sub-font-size: .7em;
+	--sub-font-size: .8em;
 
 	$_btnBckgColor: #fff;
 
@@ -108,7 +108,7 @@ ul {
 	font-size: 1em;
 
 	border: 0;
-	padding: 10px;
+	padding: 10px 15px;
 	outline: 0;
 
 	@include material-shadow;
@@ -127,21 +127,35 @@ ul {
 
 	@include transition(.5s);
 
+	&--name, &--comp {
+		background-color: transparent;
+		box-shadow: none;
+		padding: 10px 5px;
+
+		color: #fff;
+
+		&:hover {
+			background-color: darken($_btnBckgColor, 60%);
+		}
+	}
+
 	&[data-selected] {
 		background-color: darken($_btnBckgColor, 50%);
 		color: #fff;
 	}
 
-	&__name {
-		&--alt-names-list {
+	&--name {
+		&__alt-names-list {
+			margin-top: 2.5px;
 			font-size: var(--sub-font-size);
 
 			li::before { content: 'aka ' }
 		}
 	}
 
-	&__comp {
-		&--mini {
+	&--comp {
+		&__mini {
+			margin-top: 2.5px;
 			font-size: var(--sub-font-size);
 		}
 	}
@@ -152,7 +166,7 @@ ul {
 }
 
 .names, .comps-list {
-	padding: 10px 10px 10px 15px;
+	padding: 10px 0;
 
 	&::-webkit-scrollbar {
 		width: 5px; height: 5px;
@@ -181,6 +195,9 @@ ul {
 }
 
 .comp {
+	padding: 10px;
+	background-color: #e6e6e6;
+
 	font-size: 18px;
 	line-height: 1.3em;
 
@@ -193,11 +210,6 @@ ul {
 	// 	margin-top: 15px;
 	// 	border-top: 5px dashed #e6e6e6;
 	// }
-
-	&__header, &__games {
-		background-color: #e6e6e6;
-		padding: 10px;
-	}
 
 	&__header {
 		&--title {
@@ -451,7 +463,7 @@ ul {
 
 @media screen and (max-width: 992px) {
 	.container {
-		grid-template: 50px 50px auto / auto;
+		grid-template: 40px 40px auto / auto;
 	}
 
 	.db-info {
@@ -459,21 +471,25 @@ ul {
 	}
 
 	.btn {
-		padding: 5px 10px;
+		&--name, &--comp {
+			height: 100%;
+			padding: 0 10px;
+		}
 
-		&__name {
-			&--alt-names-list {
+		&--name {
+			&__alt-names-list {
 				display: none;
 			}
 		}
 
-		&__comp {
+		&--comp {
 			& > * {
 				display: inline-block;
 				vertical-align: middle;
 			}
 
-			&--mini {
+			&__mini {
+				margin-top: 0;
 				margin-left: 5px;
 
 				&::before { content: '(' }
@@ -488,11 +504,15 @@ ul {
 		overflow-y: hidden;
 		overflow-x: auto;
 
-		padding: 10px;
+		padding: 0 10px;
 
 		& > ul {
 			width: -moz-max-content;
 			width: max-content;
+
+			&, & > li {
+				height: 100%;
+			}
 
 			& > li {
 				display: inline-block;
@@ -515,6 +535,14 @@ ul {
 
 		&__info {
 			margin-top: 5px;
+		}
+	}
+}
+
+@media screen and (max-width: 501px) {
+	._game {
+		&__image {
+			height: 150px;
 		}
 	}
 }
