@@ -640,13 +640,25 @@ document.addEventListener('DOMContentLoaded', () => {
 	let containerBox = $make.qs('.container')
 
 	documentBody.classList.remove('no-js')
-	containerBox.innerHTML = ''
+	containerBox.innerText = ''
 
-	new Array('names', 'comps-list', 'comps').forEach(_class => {
+	new Array('warning', 'names', 'comps-list', 'comps').forEach(_class => {
 		containerBox.appendChild($create.elem('div', '', _class))
 	})
 
 	documentBody.insertBefore(containerBox, documentBody.firstChild)
+
+	const warningBox = $make.qsf('.warning', containerBox)
+
+	const email = 'op@gdjams.ru'
+
+	warningBox.innerHTML =
+		'<p>' +
+			'Внимание! Обновления <a href="https://github.com/twoweeks/db" target="_blank" rel="nofollow noopener">базы данных</a> ' +
+			'по конкурсам более не производятся. ' +
+			'Если вы готовы взять на себя её поддержку, напишите на почту '  +
+			`<a href="mailto:${email}">${email}</a>` +
+		'</p>'
 
 	parseLocalNames([
 		{ name: 'Two Weeks Game', file: 'twg' },

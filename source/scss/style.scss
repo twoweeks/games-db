@@ -27,7 +27,13 @@ body {
 
 .container {
 	display: grid;
+
 	grid-template-columns: 200px 200px auto;
+	grid-template-rows: auto 1fr;
+
+	grid-template-areas:
+		"warning warning warning"
+		"names comps-list comps";
 
 	&:empty {
 		display: none;
@@ -181,16 +187,42 @@ ul {
 	}
 }
 
+.warning {
+	background-color: $primeColor;
+
+	padding: 15px 10px;
+
+	grid-area: warning;
+
+	text-align: center;
+	line-height: 1.5;
+	color: #fff;
+
+	a {
+		color: #fff;
+
+		&:hover {
+			color: #ccc;
+		}
+	}
+}
+
 .names {
 	background-color: $primeColor;
+
+	grid-area: names;
 }
 
 .comps {
 	background-color: lighten($primeColor, 20%);
 	padding: 10px;
 
+	grid-area: comps;
+
 	&-list {
 		background-color: lighten($primeColor, 10%);
+
+		grid-area: comps-list;
 	}
 }
 
@@ -463,7 +495,9 @@ ul {
 
 @media screen and (max-width: 992px) {
 	.container {
-		grid-template: 40px 40px auto / auto;
+		grid-template-columns: 1fr;
+		grid-template-rows: auto 40px 40px auto;
+		grid-template-areas: "warning" "names" "comps-list" "comps";
 	}
 
 	.db-info {
