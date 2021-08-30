@@ -16,19 +16,14 @@ let
 	liveServer =  require('browser-sync')
 
 let sass = {
-	compile:  require('gulp-sass'),
+	compile:  require('gulp-sass')(require('sass')),
 	watch:    require('gulp-watch-sass'),
 	vars:     require('gulp-sass-vars')
 }
 
-let uglify = {
-	core:      require('terser'),
-	composer:  require('gulp-uglify/composer')
-}
+let terser = require('gulp-terser')
 
-let
-	minifyJS = uglify.composer(uglify.core, console),
-	reloadServer = () => liveServer.stream()
+let reloadServer = () => liveServer.stream()
 
 let parseYAMLfile = fileName => parseYAML.load(fs.readFileSync(`./${fileName}.yaml`, 'utf8'))
 
@@ -92,7 +87,7 @@ gulp.task('pug:dev', () => tube(
 
 let jsTubes = (dest = paths.js.prod) => [
 	plumber(),
-	minifyJS({}),
+	terser(),
 	bom(),
 	rename({ suffix: '.min' }),
 	gulp.dest(dest)
