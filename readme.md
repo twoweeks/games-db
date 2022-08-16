@@ -1,5 +1,7 @@
 # Парсер [базы данных игр](https://github.com/twoweeks/db) с конкурсов /gd/
 
+### ПРОЕКТ БОЛЬШЕ НЕ ПОДДЕРЖИВАЕТСЯ
+
 ### И что мне с этим делать?
 
 * Установи [Node.js](https://nodejs.org/en/download/) и [Git](https://git-scm.com/downloads)
