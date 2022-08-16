@@ -5,7 +5,6 @@ let
 	fs =          require('fs'),
 	gulp =        require('gulp'),
 	tube =        require('gulp-pipe'),
-	bom =         require('gulp-bom'),
 	rename =      require('gulp-rename'),
 	watch =       require('gulp-watch'),
 	clean =       require('gulp-clean'),
@@ -71,7 +70,6 @@ let pugTubes = [
 
 		primeColor: config.prime_color
 	}}),
-	bom(),
 	gulp.dest(paths.html.prod)
 ]
 
@@ -88,7 +86,6 @@ gulp.task('pug:dev', () => tube(
 let jsTubes = (dest = paths.js.prod) => [
 	plumber(),
 	terser(),
-	bom(),
 	rename({ suffix: '.min' }),
 	gulp.dest(dest)
 ]
@@ -111,7 +108,6 @@ let scssTubes = [
 	}, { verbose: false }),
 	sass.compile({ outputStyle: 'compressed' }),
 	cleanCSS(),
-	bom(),
 	rename({ suffix: '.min' }),
 	gulp.dest(paths.css.prod)
 ]
