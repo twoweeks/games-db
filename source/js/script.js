@@ -633,12 +633,12 @@ const getCompData = (options) => {
 						),
 						compBoxAchList = $create.elem("ul");
 
-					compBoxAhievements.dataset.openText = "Открыть ачивки";
-					compBoxAhievements.dataset.hideText = "Скрыть ачивки";
+					let compBoxSummary = $create.elem("summary", "", "btn btn--nfw");
 
-					compBoxAhievements.appendChild(
-						$create.elem("summary", "", "btn btn--nfw")
-					);
+					compBoxSummary.dataset.openText = "Открыть ачивки";
+					compBoxSummary.dataset.hideText = "Скрыть ачивки";
+
+					compBoxAhievements.appendChild(compBoxSummary);
 
 					comp.achievements.forEach((ach) => {
 						let achListItem = $create.elem("li");
