@@ -872,13 +872,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	const email = "op@gdjams.ru";
 
-	warningBox.innerHTML =
-		"<p>" +
+	const warningBoxContent = $create.elem(
+		"p",
 		'Внимание! Обновления <a href="https://github.com/twoweeks/db" target="_blank" rel="nofollow noopener">базы данных</a> ' +
-		"по конкурсам более не производятся. " +
-		"Если вы готовы взять на себя её поддержку, напишите на почту " +
-		`<a href="mailto:${email}">${email}</a>` +
-		"</p>";
+			"по конкурсам более не производятся. " +
+			"Если вы готовы взять на себя её поддержку, напишите на почту " +
+			`<a href="mailto:${email}">${email}</a>.`
+	);
+
+	const closeWarningBoxButton = $create.elem("button", "Закрыть");
+
+	closeWarningBoxButton.addEventListener("click", () => {
+		warningBox.hidden = true;
+	});
+
+	warningBoxContent.appendChild(closeWarningBoxButton);
+
+	warningBox.appendChild(warningBoxContent);
 
 	parseLocalNames([
 		{ name: "Two Weeks Game", file: "twg" },
