@@ -1,151 +1,164 @@
-'use strict'
+"use strict";
 
-let
-	project =     require('./package.json'),
-	fs =          require('fs'),
-	gulp =        require('gulp'),
-	tube =        require('gulp-pipe'),
-	rename =      require('gulp-rename'),
-	watch =       require('gulp-watch'),
-	clean =       require('gulp-clean'),
-	plumber =     require('gulp-plumber'),
-	cleanCSS =    require('gulp-clean-css'),
-	pug =         require('gulp-pug'),
-	parseYAML =   require('js-yaml'),
-	liveServer =  require('browser-sync')
+const project = require("./package.json");
+const fs = require("fs");
+const gulp = require("gulp");
+const tube = require("gulp-pipe");
+const rename = require("gulp-rename");
+const watch = require("gulp-watch");
+const clean = require("gulp-clean");
+const plumber = require("gulp-plumber");
+const cleanCSS = require("gulp-clean-css");
+const pug = require("gulp-pug");
+const parseYAML = require("js-yaml");
+const liveServer = require("browser-sync");
+const terser = require("gulp-terser");
 
 let sass = {
-	compile:  require('gulp-sass')(require('sass')),
-	watch:    require('gulp-watch-sass'),
-	vars:     require('gulp-sass-vars')
-}
+	compile: require("gulp-sass")(require("sass")),
+	watch: require("gulp-watch-sass"),
+	vars: require("gulp-sass-vars"),
+};
 
-let terser = require('gulp-terser')
+let reloadServer = () => liveServer.stream();
 
-let reloadServer = () => liveServer.stream()
+let parseYAMLfile = (fileName) =>
+	parseYAML.load(fs.readFileSync(`./${fileName}.yaml`, "utf8"));
 
-let parseYAMLfile = fileName => parseYAML.load(fs.readFileSync(`./${fileName}.yaml`, 'utf8'))
+let config = parseYAMLfile("project-config");
 
-let config = parseYAMLfile('project-config')
+let vendors = parseYAMLfile("project-vendors");
 
-let vendors = parseYAMLfile('project-vendors')
-
-let dirs = config.dirs
+let dirs = config.dirs;
 
 let paths = {
 	html: {
-		dev:   [`${dirs.dev}/pug/**/*.pug`, `!${dirs.dev}/pug/inc/**/*.pug`],
-		prod:   `${dirs.build}/`,
+		dev: [`${dirs.dev}/pug/**/*.pug`, `!${dirs.dev}/pug/inc/**/*.pug`],
+		prod: `${dirs.build}/`,
 	},
 
 	js: {
-		dev:    `${dirs.dev}/js/**/*.js`,
-		prod:   `${dirs.build}/${dirs.assets}/js/`,
+		dev: `${dirs.dev}/js/**/*.js`,
+		prod: `${dirs.build}/${dirs.assets}/js/`,
 	},
 
 	css: {
-		dev:   `${dirs.dev}/scss/**/*.scss`,
-		prod:  `${dirs.build}/${dirs.assets}/css/`,
+		dev: `${dirs.dev}/scss/**/*.scss`,
+		prod: `${dirs.build}/${dirs.assets}/css/`,
 	},
-}
+};
 
-gulp.task('liveReload', () => liveServer({
-	server: [dirs.build, dirs.dist_static],
-	port: 8080,
-	notify: false
-}))
+gulp.task("liveReload", () =>
+	liveServer({
+		server: [dirs.build, dirs.dist_static],
+		port: 8080,
+		notify: false,
+	})
+);
 
 let pugTubes = [
 	plumber(),
-	pug({ locals: {
-		VERSION:     project.version,
+	pug({
+		locals: {
+			VERSION: project.version,
 
-		PATHS: {
-			js:   `./${dirs.assets}/js`,
-			css:  `./${dirs.assets}/css`,
-			img:  `./${dirs.assets}/img`,
+			PATHS: {
+				js: `./${dirs.assets}/js`,
+				css: `./${dirs.assets}/css`,
+				img: `./${dirs.assets}/img`,
+			},
+
+			LIBS: vendors,
+
+			primeColor: config.prime_color,
 		},
+	}),
+	gulp.dest(paths.html.prod),
+];
 
-		LIBS: vendors,
+gulp.task("pug:build", () => tube([gulp.src(paths.html.dev)].concat(pugTubes)));
 
-		primeColor: config.prime_color
-	}}),
-	gulp.dest(paths.html.prod)
-]
-
-gulp.task('pug:build', () => tube(
-	[gulp.src(paths.html.dev)]
-		.concat(pugTubes)
-))
-
-gulp.task('pug:dev', () => tube(
-	[watch(paths.html.dev, { ignoreInitial: false })]
-		.concat(pugTubes, [reloadServer()])
-))
+gulp.task("pug:dev", () =>
+	tube(
+		[watch(paths.html.dev, { ignoreInitial: false })].concat(pugTubes, [
+			reloadServer(),
+		])
+	)
+);
 
 let jsTubes = (dest = paths.js.prod) => [
 	plumber(),
 	terser(),
-	rename({ suffix: '.min' }),
-	gulp.dest(dest)
-]
+	rename({ suffix: ".min" }),
+	gulp.dest(dest),
+];
 
-gulp.task('js:assets:build', () => tube(
-	[gulp.src(paths.js.dev)]
-		.concat(jsTubes())
-))
+gulp.task("js:assets:build", () =>
+	tube([gulp.src(paths.js.dev)].concat(jsTubes()))
+);
 
-gulp.task('js:assets:dev', () => tube(
-	[watch(paths.js.dev, { ignoreInitial: false })]
-		.concat(jsTubes(), [reloadServer()])
-))
+gulp.task("js:assets:dev", () =>
+	tube(
+		[watch(paths.js.dev, { ignoreInitial: false })].concat(jsTubes(), [
+			reloadServer(),
+		])
+	)
+);
 
 let scssTubes = [
 	plumber(),
-	sass.vars({
-		VERSION:     project.version,
-		primeColor:  config.prime_color
-	}, { verbose: false }),
-	sass.compile({ outputStyle: 'compressed' }),
+	sass.vars(
+		{
+			VERSION: project.version,
+			primeColor: config.prime_color,
+		},
+		{ verbose: false }
+	),
+	sass.compile({ outputStyle: "compressed" }),
 	cleanCSS(),
-	rename({ suffix: '.min' }),
-	gulp.dest(paths.css.prod)
-]
+	rename({ suffix: ".min" }),
+	gulp.dest(paths.css.prod),
+];
 
-gulp.task('scss:build', () => tube(
-	[gulp.src(paths.css.dev)].concat(scssTubes)
-))
+gulp.task("scss:build", () =>
+	tube([gulp.src(paths.css.dev)].concat(scssTubes))
+);
 
-gulp.task('scss:dev', () => tube(
-	[sass.watch(paths.css.dev)].concat(scssTubes, [reloadServer()])
-))
+gulp.task("scss:dev", () =>
+	tube([sass.watch(paths.css.dev)].concat(scssTubes, [reloadServer()]))
+);
 
 /* Копирование файлов из dirs.build и dirs.dist_static в одну общую dirs.dist */
 
-gulp.task('dist:copy', () => tube([
-	gulp.src([
-		`${dirs.build}/**/*`, `${dirs.build}/**/.*`,
-		`${dirs.dist_static}/**/*`, `${dirs.dist_static}/**/.*`
-	]),
-	gulp.dest(dirs.dist)
-]))
+gulp.task("dist:copy", () =>
+	tube([
+		gulp.src([
+			`${dirs.build}/**/*`,
+			`${dirs.build}/**/.*`,
+			`${dirs.dist_static}/**/*`,
+			`${dirs.dist_static}/**/.*`,
+		]),
+		gulp.dest(dirs.dist),
+	])
+);
 
-gulp.task('dist:clean', () => tube([
-	gulp.src(dirs.dist, { read: false, allowEmpty: true }),
-	clean()
-]))
+gulp.task("dist:clean", () =>
+	tube([gulp.src(dirs.dist, { read: false, allowEmpty: true }), clean()])
+);
 
-gulp.task('dist', gulp.series('dist:clean', 'dist:copy'))
+gulp.task("dist", gulp.series("dist:clean", "dist:copy"));
 
 /* Команды для сборки и разработки */
 
-gulp.task('build', gulp.parallel('pug:build', 'js:assets:build', 'scss:build'))
+gulp.task("build", gulp.parallel("pug:build", "js:assets:build", "scss:build"));
 
-gulp.task('build:clean', () => tube([
-	gulp.src(dirs.build, { read: false, allowEmpty: true }),
-	clean()
-]))
+gulp.task("build:clean", () =>
+	tube([gulp.src(dirs.build, { read: false, allowEmpty: true }), clean()])
+);
 
-gulp.task('dev', gulp.parallel('liveReload', 'pug:dev', 'js:assets:dev', 'scss:dev'))
+gulp.task(
+	"dev",
+	gulp.parallel("liveReload", "pug:dev", "js:assets:dev", "scss:dev")
+);
 
-gulp.task('default', gulp.series('build:clean', 'build', 'dist'))
+gulp.task("default", gulp.series("build:clean", "build", "dist"));

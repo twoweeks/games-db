@@ -1,12 +1,16 @@
-@import 'inc/mixins';
+@import "inc/mixins";
 
 * {
 	box-sizing: border-box;
-	padding: 0; margin: 0;
+	padding: 0;
+	margin: 0;
 }
 
-html, body, .container {
-	width: 100%; height: 100%;
+html,
+body,
+.container {
+	width: 100%;
+	height: 100%;
 }
 
 body {
@@ -52,20 +56,25 @@ body {
 
 .db-info {
 	position: fixed;
-	bottom: 0; left: 0;
+	bottom: 0;
+	left: 0;
 	border-radius: 0 10px 0 0;
 	background-color: #000;
 
-	@include transition(.3s);
+	@include transition(0.3s);
 
 	font-size: 13px;
 
-	opacity: .7;
+	opacity: 0.7;
 	padding: 5px;
 
-	&:hover { opacity: 1 }
+	&:hover {
+		opacity: 1;
+	}
 
-	a { color: #fff }
+	a {
+		color: #fff;
+	}
 }
 
 body > div {
@@ -95,7 +104,7 @@ ul {
 
 	& > .material-icons {
 		&::after {
-			content: '\00A0';
+			content: "\00A0";
 		}
 	}
 }
@@ -105,7 +114,7 @@ ul {
 }
 
 .btn {
-	--sub-font-size: .8em;
+	--sub-font-size: 0.8em;
 
 	$_btnBckgColor: #fff;
 
@@ -123,7 +132,8 @@ ul {
 		background-color: darken($_btnBckgColor, 5%);
 	}
 
-	&:not(&--nfw) { // not full width
+	&:not(&--nfw) {
+		// not full width
 		display: block;
 		width: 100%;
 	}
@@ -131,9 +141,10 @@ ul {
 	user-select: none;
 	cursor: pointer;
 
-	@include transition(.5s);
+	@include transition(0.5s);
 
-	&--name, &--comp {
+	&--name,
+	&--comp {
 		background-color: transparent;
 		box-shadow: none;
 		padding: 10px 5px;
@@ -155,7 +166,9 @@ ul {
 			margin-top: 2.5px;
 			font-size: var(--sub-font-size);
 
-			li::before { content: 'aka ' }
+			li::before {
+				content: "aka ";
+			}
 		}
 	}
 
@@ -167,15 +180,19 @@ ul {
 	}
 }
 
-.names, .comps-list, .comps {
+.names,
+.comps-list,
+.comps {
 	overflow-y: scroll;
 }
 
-.names, .comps-list {
+.names,
+.comps-list {
 	padding: 10px 0;
 
 	&::-webkit-scrollbar {
-		width: 5px; height: 5px;
+		width: 5px;
+		height: 5px;
 	}
 
 	&::-webkit-scrollbar-thumb {
@@ -183,7 +200,7 @@ ul {
 	}
 
 	&::-webkit-scrollbar-track {
-		box-shadow: inset 0 0 5px rgba(0, 0, 0, .3);
+		box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
 	}
 }
 
@@ -263,31 +280,35 @@ ul {
 					color: #282828;
 				}
 
-				@include transition(.3s);
+				@include transition(0.3s);
 			}
 
 			small {
 				display: block;
 				margin-top: 5px;
 
-				font-size: .6em;
+				font-size: 0.6em;
 				white-space: nowrap;
 
 				&::before {
-					content: ' ['
+					content: " [";
 				}
 
 				&::after {
-					content: '] '
+					content: "] ";
 				}
 			}
 		}
 
-		&--note, &--ach, &--fund, &--dates {
+		&--note,
+		&--ach,
+		&--fund,
+		&--dates {
 			margin-top: 10px;
 		}
 
-		&--themes, &--ach ul {
+		&--themes,
+		&--ach ul {
 			li {
 				&:first-child {
 					margin-top: 0;
@@ -299,7 +320,7 @@ ul {
 					}
 
 					&:not(:first-child) {
-						font-size: .9em
+						font-size: 0.9em;
 					}
 				}
 			}
@@ -315,7 +336,7 @@ ul {
 					}
 
 					&:nth-child(2) {
-						font-size: .9em;
+						font-size: 0.9em;
 					}
 				}
 			}
@@ -323,12 +344,12 @@ ul {
 
 		&--ach {
 			summary::after {
-				content: attr(data-open-text)
+				content: attr(data-open-text);
 			}
 
 			&[open] {
 				summary::after {
-					content: attr(data-hide-text)
+					content: attr(data-hide-text);
 				}
 			}
 
@@ -395,7 +416,8 @@ ul {
 		height: 200px;
 
 		img {
-			width: 100%; height: 100%;
+			width: 100%;
+			height: 100%;
 			object-fit: contain;
 
 			&:not([src]) {
@@ -447,7 +469,7 @@ ul {
 							margin-top: 0;
 
 							&:not(:last-child)::after {
-								content: ' ';
+								content: " ";
 							}
 
 							a {
@@ -467,12 +489,13 @@ ul {
 
 ._status {
 	.material-icons {
-		@each $browser in '-webkit-', '-moz-', '' {
-			#{$browser}text-stroke: .5px #333;
+		@each $browser in "-webkit-", "-moz-", "" {
+			#{$browser}text-stroke: 0.5px #333;
 		}
 	}
 
-	&--win, &--1 {
+	&--win,
+	&--1 {
 		color: #ffff33;
 	}
 
@@ -505,7 +528,8 @@ ul {
 	}
 
 	.btn {
-		&--name, &--comp {
+		&--name,
+		&--comp {
 			height: 100%;
 			padding: 0 10px;
 		}
@@ -526,15 +550,20 @@ ul {
 				margin-top: 0;
 				margin-left: 5px;
 
-				&::before { content: '(' }
-				&::after { content: ')' }
+				&::before {
+					content: "(";
+				}
+				&::after {
+					content: ")";
+				}
 			}
 		}
 	}
 
 	$_blocksHeight: 70px;
 
-	.names, .comps-list {
+	.names,
+	.comps-list {
 		overflow-y: hidden;
 		overflow-x: auto;
 
@@ -544,7 +573,8 @@ ul {
 			width: -moz-max-content;
 			width: max-content;
 
-			&, & > li {
+			&,
+			& > li {
 				height: 100%;
 			}
 
@@ -552,7 +582,9 @@ ul {
 				display: inline-block;
 				margin: 0 5px;
 
-				&:first-child { margin-left: 0 }
+				&:first-child {
+					margin-left: 0;
+				}
 			}
 		}
 	}
