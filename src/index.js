@@ -1,4 +1,4 @@
-"use strict";
+import "./style.scss";
 
 const storageRepoItem = {
 	name: "_db_repo",
@@ -9,10 +9,7 @@ $create.db = {
 	icon: (icon) => `<i class="material-icons">${icon}</i>`,
 
 	textBlocks: (text) =>
-		`<span class="_tb">${text.replace(
-			/\n/g,
-			'</span><span class="_tb">'
-		)}</span>`,
+		`<span class="_tb">${text.replace(/\n/g, '</span><span class="_tb">')}</span>`,
 
 	time: (timeStamp) => {
 		return new Date(timeStamp * 1000).toLocaleDateString([], {
@@ -121,60 +118,48 @@ const parseGame = (gameObject) => {
 
 				let addLinkToContent = (link, text, _class) =>
 					linksContentList.appendChild(
-						$create.elem("li", $create.link(link, text, _class, ["e", "html"]))
+						$create.elem("li", $create.link(link, text, _class, ["e", "html"])),
 					);
 
 				switch (type) {
 					case "store":
 						if ("steam" in content) {
-							addLinkToContent(
-								`https://store.steampowered.com/app/${content.steam}`,
-								"Steam"
-							);
+							addLinkToContent(`https://store.steampowered.com/app/${content.steam}`, "Steam");
 						}
 
 						if ("gplay" in content) {
 							addLinkToContent(
 								`https://play.google.com/store/apps/details?id=${content.gplay}`,
-								"Google Play"
+								"Google Play",
 							);
 						}
 
 						if ("itunes" in content) {
-							addLinkToContent(
-								`https://itunes.apple.com/app/id${content.itunes}`,
-								"App Store"
-							);
+							addLinkToContent(`https://itunes.apple.com/app/id${content.itunes}`, "App Store");
 						}
 
 						if ("itch" in content) {
 							addLinkToContent(
 								`https://${content.itch.user}.itch.io/${content.itch.game}`,
-								"itch.io"
+								"itch.io",
 							);
 						}
 
 						if ("gamejolt" in content) {
-							addLinkToContent(
-								`https://gamejolt.com/games/${content.gamejolt}`,
-								"Game Jolt"
-							);
+							addLinkToContent(`https://gamejolt.com/games/${content.gamejolt}`, "Game Jolt");
 						}
 
 						break;
 
 					case "standart":
 						if ("yadisk" in content) {
-							addLinkToContent(
-								`https://yadi.sk/d/${content.yadisk}`,
-								"Яндекс.Диск"
-							);
+							addLinkToContent(`https://yadi.sk/d/${content.yadisk}`, "Яндекс.Диск");
 						}
 
 						if ("gdrive" in content) {
 							addLinkToContent(
 								`https://drive.google.com/open?id=${content.gdrive}`,
-								"Google Drive"
+								"Google Drive",
 							);
 						}
 
@@ -187,17 +172,11 @@ const parseGame = (gameObject) => {
 					case "source":
 						if ("repo" in content) {
 							if ("github" in content.repo) {
-								addLinkToContent(
-									`https://github.com/${content.repo.github}`,
-									"GitHub"
-								);
+								addLinkToContent(`https://github.com/${content.repo.github}`, "GitHub");
 							}
 
 							if ("bitbucket" in content.repo) {
-								addLinkToContent(
-									`https://bitbucket.com/${content.repo.bitbucket}`,
-									"BitBucket"
-								);
+								addLinkToContent(`https://bitbucket.com/${content.repo.bitbucket}`, "BitBucket");
 							}
 						}
 						if ("link" in content) {
@@ -207,10 +186,7 @@ const parseGame = (gameObject) => {
 
 					case "ost":
 						if ("soundcloud" in content) {
-							addLinkToContent(
-								`https://soundcloud.com/${content.soundcloud}`,
-								"SoundCloud"
-							);
+							addLinkToContent(`https://soundcloud.com/${content.soundcloud}`, "SoundCloud");
 						}
 
 						break;
@@ -226,34 +202,23 @@ const parseGame = (gameObject) => {
 							linksObject[link.type],
 							linksObject[link.type].replace(/^(https?):\/\//, ""),
 							"",
-							["e", "html"]
-						)}</td>`
+							["e", "html"],
+						)}</td>`,
 					);
 					break;
 
 				case "store":
-					addToRow(
-						`<td>Магазины</td><td>${parseLinkContent(
-							link.content,
-							link.type
-						)}</td>`
-					);
+					addToRow(`<td>Магазины</td><td>${parseLinkContent(link.content, link.type)}</td>`);
 					break;
 
 				case "updated":
 					addToRow(
-						`<td>Обновлённая финальная версия</td><td>${parseLinkContent(
-							link.content
-						)}</td>`
+						`<td>Обновлённая финальная версия</td><td>${parseLinkContent(link.content)}</td>`,
 					);
 					break;
 
 				case "final":
-					addToRow(
-						`<td>Финальная версия</td><td>${parseLinkContent(
-							link.content
-						)}</td>`
-					);
+					addToRow(`<td>Финальная версия</td><td>${parseLinkContent(link.content)}</td>`);
 					break;
 
 				case "dlc":
@@ -261,35 +226,19 @@ const parseGame = (gameObject) => {
 					break;
 
 				case "demo_updated":
-					addToRow(
-						`<td>Обновлённая демоверсия</td><td>${parseLinkContent(
-							link.content
-						)}</td>`
-					);
+					addToRow(`<td>Обновлённая демоверсия</td><td>${parseLinkContent(link.content)}</td>`);
 					break;
 
 				case "demo":
-					addToRow(
-						`<td>Демоверсия</td><td>${parseLinkContent(link.content)}</td>`
-					);
+					addToRow(`<td>Демоверсия</td><td>${parseLinkContent(link.content)}</td>`);
 					break;
 
 				case "source":
-					addToRow(
-						`<td>Исходный код</td><td>${parseLinkContent(
-							link.content,
-							link.type
-						)}</td>`
-					);
+					addToRow(`<td>Исходный код</td><td>${parseLinkContent(link.content, link.type)}</td>`);
 					break;
 
 				case "ost":
-					addToRow(
-						`<td>Саундтрек</td><td>${parseLinkContent(
-							link.content,
-							link.type
-						)}</td>`
-					);
+					addToRow(`<td>Саундтрек</td><td>${parseLinkContent(link.content, link.type)}</td>`);
 					break;
 			}
 
@@ -322,6 +271,18 @@ const parseGame = (gameObject) => {
 	}
 
 	let gameInfoBox = $create.elem("div", "", "_game__info");
+
+	let getIsTrophyGameStatus = (status) => {
+		switch (status) {
+			case "win":
+			case "1":
+			case "2":
+			case "3":
+			case "4":
+				return true;
+		}
+		return false;
+	};
 
 	let getGameStatusName = (status) => {
 		let _status = "Неизвестный статус";
@@ -356,14 +317,18 @@ const parseGame = (gameObject) => {
 	let gameInfoStatusName = getGameStatusName(game.status);
 
 	if ("status" in game && game.status != "") {
-		/* TODO: дождаться, когда в пак иконок введут кубок (github.com/google/material-design-icons/issues/136), и заменить звёздочку им */
-
 		let gameInfoStatus = $create.elem(
 			"div",
-			$create.db.icon(game.status != "disqualified" ? "star" : "close"),
+			$create.db.icon(
+				game.status != "disqualified"
+					? getIsTrophyGameStatus(game.status)
+						? "emoji_events"
+						: "star"
+					: "close",
+			),
 			`_game__info--status _status _status--${
 				game.status && game.status != "" ? game.status : "empty"
-			}`
+			}`,
 		);
 
 		gameInfoStatus.firstChild.setAttribute("title", gameInfoStatusName);
@@ -376,10 +341,7 @@ const parseGame = (gameObject) => {
 	let gameInfoName = $create.elem("h2", "", "_game__info--name _middle");
 
 	gameInfoName.appendChild(
-		$create.elem(
-			"span",
-			"name" in game && game.name != "" ? game.name : "Названия нет"
-		)
+		$create.elem("span", "name" in game && game.name != "" ? game.name : "Названия нет"),
 	);
 
 	gameInfoBox.appendChild(gameInfoName);
@@ -391,11 +353,9 @@ const parseGame = (gameObject) => {
 	gameInfoBox.appendChild(
 		$create.elem(
 			"div",
-			game.description
-				? $create.db.textBlocks(game.description)
-				: "Описания нет.",
-			"_game__info--description"
-		)
+			game.description ? $create.db.textBlocks(game.description) : "Описания нет.",
+			"_game__info--description",
+		),
 	);
 
 	if ("tools" in game && game.tools != "") {
@@ -403,9 +363,7 @@ const parseGame = (gameObject) => {
 	}
 
 	if ("dependencies" in game && game.dependencies != "") {
-		gameInfoBox.appendChild(
-			$create.elem("p", `Зависимости: ${game.dependencies}`)
-		);
+		gameInfoBox.appendChild($create.elem("p", `Зависимости: ${game.dependencies}`));
 	}
 
 	if ("note" in game && game.note != "") {
@@ -424,8 +382,8 @@ const parseGame = (gameObject) => {
 			$create.elem(
 				"p",
 				`<i>P.S. Эта игра также была отправлена в параллельно проходящий конкурс как ${gameRepeatStatusName}.</i>`,
-				"_game__info--repeat"
-			)
+				"_game__info--repeat",
+			),
 		);
 	}
 
@@ -437,13 +395,10 @@ const parseGame = (gameObject) => {
 const getCompData = (options) => {
 	let file = "file" in options && options.file != "" ? options.file : "twg";
 
-	let repo =
-		"repo" in options && options.repo != ""
-			? options.repo
-			: storageRepoItem.byDefault;
+	let repo = "repo" in options && options.repo != "" ? options.repo : storageRepoItem.byDefault;
 
 	let CDN = {
-		data: `https://raw.githubusercontent.com/${repo}/master/json/min`,
+		data: `https://raw.githubusercontent.com/${repo}/master/dist`,
 		imgs: "https://cdn.blyat.science/gd",
 	};
 
@@ -473,13 +428,12 @@ const getCompData = (options) => {
 				elemData.selected = "";
 				_trigger = true;
 
-				let editonString =
-					comp.edition != "_none" ? `&edition=${comp.edition}` : "";
+				let editonString = comp.edition != "_none" ? `&edition=${comp.edition}` : "";
 
 				history.pushState(
 					"",
 					document.title,
-					`${window.location.pathname}?get=${file}&comp=${comp.num}${editonString}`
+					`${window.location.pathname}?get=${file}&comp=${comp.num}${editonString}`,
 				);
 
 				if (elem.classList.contains("btn")) {
@@ -512,7 +466,7 @@ const getCompData = (options) => {
 		}
 	};
 
-	fetch(`${CDN.data}/${file}.json`)
+	fetch(`${CDN.data}/${file}.min.json`)
 		.then((response) => {
 			if (response.ok) {
 				compsListContainer.innerText = "";
@@ -525,16 +479,13 @@ const getCompData = (options) => {
 		.then((result) => {
 			let compsList = $create.elem("ul");
 
-			result.forEach((comp, i) => {
+			result.jams.forEach((comp, i) => {
 				let compsListItem = $create.elem("li"),
 					compsListItemButton = $create.elem("button", "", "btn btn--comp");
 
-				compsListItemButton.appendChild(
-					$create.elem("span", `Конкурс №${comp.meta.num}`)
-				);
+				compsListItemButton.appendChild($create.elem("span", `Конкурс №${comp.meta.num}`));
 
-				let isCompHaveEdition =
-					"edition" in comp.meta && comp.meta.edition != "";
+				let isCompHaveEdition = "edition" in comp.meta && comp.meta.edition != "";
 				let isCompHaveAKA = "aka" in comp.meta && comp.meta.aka != "";
 
 				compsListItem.appendChild(compsListItemButton);
@@ -551,25 +502,17 @@ const getCompData = (options) => {
 				let compBoxHeaderTitle = $create.elem(
 					"h2",
 					`<span>Конкурс №${comp.meta.num}</span>`,
-					"comp__header--title"
+					"comp__header--title",
 				);
 
 				if ("site" in comp && comp.site != "") {
-					let compSiteLink = $create.link(
-						comp.site,
-						$create.db.icon("home"),
-						"",
-						["e"]
-					);
+					let compSiteLink = $create.link(comp.site, $create.db.icon("home"), "", ["e"]);
 					compSiteLink.setAttribute("title", "Сайт конкурса");
 					compBoxHeaderTitle.appendChild(compSiteLink);
 				}
 
 				if (isCompHaveEdition) {
-					let compEdition = $create.elem(
-						"small",
-						`${comp.meta.edition} Edition`
-					);
+					let compEdition = $create.elem("small", `${comp.meta.edition} Edition`);
 					compBoxHeaderTitle.appendChild(compEdition);
 				}
 
@@ -581,26 +524,18 @@ const getCompData = (options) => {
 				compBoxHeader.appendChild(compBoxHeaderTitle);
 
 				if ("themes" in comp && comp.themes.length != 0) {
-					let compBoxHeaderThemes = $create.elem(
-						"ul",
-						"",
-						"comp__header--themes"
-					);
+					let compBoxHeaderThemes = $create.elem("ul", "", "comp__header--themes");
 
 					comp.themes.forEach((theme) => {
 						let themesListItem = $create.elem("li");
 
 						themesListItem.appendChild(
-							$create.elem(
-								"p",
-								`${$create.db.icon("label")}<span>${theme.name}</span>`,
-								"_middle"
-							)
+							$create.elem("p", `${$create.db.icon("label")}<span>${theme.name}</span>`, "_middle"),
 						);
 
 						if ("description" in theme && theme.description != "") {
 							themesListItem.appendChild(
-								$create.elem("p", $create.db.textBlocks(theme.description))
+								$create.elem("p", $create.db.textBlocks(theme.description)),
 							);
 						}
 
@@ -613,24 +548,15 @@ const getCompData = (options) => {
 				if ("note" in comp && comp.note != "") {
 					let compBoxHeaderNote = $create.elem(
 						"div",
-						$create.elem(
-							"p",
-							$create.db.textBlocks(`Примечание: ${comp.note}`),
-							"",
-							["html"]
-						),
-						"comp__header--note"
+						$create.elem("p", $create.db.textBlocks(`Примечание: ${comp.note}`), "", ["html"]),
+						"comp__header--note",
 					);
 
 					compBoxHeader.appendChild(compBoxHeaderNote);
 				}
 
 				if ("achievements" in comp && comp.achievements != "") {
-					let compBoxAhievements = $create.elem(
-							"details",
-							"",
-							"comp__header--ach"
-						),
+					let compBoxAhievements = $create.elem("details", "", "comp__header--ach"),
 						compBoxAchList = $create.elem("ul");
 
 					let compBoxSummary = $create.elem("summary", "", "btn btn--nfw");
@@ -647,8 +573,8 @@ const getCompData = (options) => {
 							$create.elem(
 								"p",
 								`${$create.db.icon("place")}<span>${ach.name}</span>`,
-								"comp__header--ach _middle"
-							)
+								"comp__header--ach _middle",
+							),
 						);
 
 						if ("description" in ach && ach.description != "") {
@@ -656,26 +582,20 @@ const getCompData = (options) => {
 								$create.elem(
 									"p",
 									$create.db.textBlocks(`<b>Описание</b>: ${ach.description}`),
-									"comp__header--ach"
-								)
+									"comp__header--ach",
+								),
 							);
 						}
 
 						if ("gift" in ach && ach.gift != "") {
 							achListItem.appendChild(
-								$create.elem(
-									"p",
-									$create.db.textBlocks(`<b>Приз</b>: ${ach.gift}`)
-								)
+								$create.elem("p", $create.db.textBlocks(`<b>Приз</b>: ${ach.gift}`)),
 							);
 						}
 
 						if ("winner" in ach && ach.winner != "") {
 							achListItem.appendChild(
-								$create.elem(
-									"p",
-									$create.db.textBlocks(`<b>Победитель</b>: ${ach.winner}`)
-								)
+								$create.elem("p", $create.db.textBlocks(`<b>Победитель</b>: ${ach.winner}`)),
 							);
 						}
 
@@ -690,34 +610,24 @@ const getCompData = (options) => {
 					let compBoxHeaderFund = $create.elem(
 						"div",
 						$create.elem("p", `Призовой фонд: ${comp.fund}`, "", ["html"]),
-						"comp__header--fund"
+						"comp__header--fund",
 					);
 
 					compBoxHeader.appendChild(compBoxHeaderFund);
 				}
 
 				if ("dates" in comp) {
-					let compBoxHeaderDates = $create.elem(
-						"div",
-						"",
-						"comp__header--dates"
-					);
+					let compBoxHeaderDates = $create.elem("div", "", "comp__header--dates");
 
 					if ("start" in comp.dates) {
 						compBoxHeaderDates.appendChild(
-							$create.elem(
-								"p",
-								`Начало конкурса: ${$create.db.time(comp.dates.start)}`
-							)
+							$create.elem("p", `Начало конкурса: ${$create.db.time(comp.dates.start)}`),
 						);
 					}
 
 					if ("end" in comp.dates) {
 						compBoxHeaderDates.appendChild(
-							$create.elem(
-								"p",
-								`Конец конкурса: ${$create.db.time(comp.dates.end)}`
-							)
+							$create.elem("p", `Конец конкурса: ${$create.db.time(comp.dates.end)}`),
 						);
 					}
 
@@ -758,7 +668,7 @@ const getCompData = (options) => {
 					let compsListItemEdtitonElem = $create.elem(
 						"p",
 						`${comp.meta.edition} Edition`,
-						"btn--comp__mini"
+						"btn--comp__mini",
 					);
 
 					compsListItemButton.appendChild(compsListItemEdtitonElem);
@@ -770,19 +680,12 @@ const getCompData = (options) => {
 				}
 
 				if (isCompHaveAKA) {
-					let compsListItemAKAElem = $create.elem(
-						"p",
-						`aka ${comp.meta.aka}`,
-						"btn--comp__mini"
-					);
+					let compsListItemAKAElem = $create.elem("p", `aka ${comp.meta.aka}`, "btn--comp__mini");
 					compsListItemButton.appendChild(compsListItemAKAElem);
 				}
 
 				if (i == 0) {
-					sessionStorage.setItem(
-						"db_firstCompInFile",
-						JSON.stringify(compData)
-					);
+					sessionStorage.setItem("db_firstCompInFile", JSON.stringify(compData));
 				}
 
 				compsListItemButton.addEventListener("click", (e) => {
@@ -811,10 +714,7 @@ const getCompData = (options) => {
 const selectName = (options) => {
 	let name = "name" in options && options.name != "" ? options.name : "twg";
 
-	let repo =
-		"repo" in options && options.repo != ""
-			? options.repo
-			: $ls.get(storageRepoItem.name);
+	let repo = "repo" in options && options.repo != "" ? options.repo : $ls.get(storageRepoItem.name);
 
 	let nameList = $make.qs(".names"),
 		nameListBtns = $make.qsf(".btn--name", nameList, ["a"]);
@@ -877,7 +777,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		'Внимание! Обновления <a href="https://github.com/twoweeks/db" target="_blank" rel="nofollow noopener">базы данных</a> ' +
 			"по конкурсам более не производятся. " +
 			"Если вы готовы взять на себя её поддержку, напишите на почту " +
-			`<a href="mailto:${email}">${email}</a>.`
+			`<a href="mailto:${email}">${email}</a>.`,
 	);
 
 	const closeWarningBoxButton = $create.elem("button", "Закрыть");

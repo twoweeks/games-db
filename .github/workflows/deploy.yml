@@ -1,0 +1,52 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-deploy
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    uses: ./.github/workflows/lint.yml
+
+  deploy-demo:
+    runs-on: ubuntu-slim
+    needs: [lint]
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: package.json
+          registry-url: https://registry.npmjs.org
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

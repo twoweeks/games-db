@@ -1,8 +1,0 @@
-prime_color: '#373737'
-
-dirs:
-  dev: source
-  build: build
-  dist: dist
-  dist_static: dist_static
-  assets: assets
