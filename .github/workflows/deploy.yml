@@ -11,7 +11,7 @@ jobs:
   lint:
     uses: ./.github/workflows/lint.yml
 
-  deploy-demo:
+  deploy:
     runs-on: ubuntu-slim
     needs: [lint]
 
